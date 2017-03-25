@@ -76,14 +76,20 @@
                                         <?php } ?>
                                      </td>
                                    
-                                    <td class="text-center quantity-cart-col"><div class="input-groupquanty-box" style="max-width: 200px;">
+                                    <td class="text-center quantity-cart-col">
+                                        <div class="quanty-box" >
                                             <div class='minus'>-</div>
                                             <input type="text" class='quantity-input' name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" size="1" class="form-control" />
-                                            <div class='plus'>+</div><span class="input-group-btn">
-                                                <button type="button" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger" onclick="cart.remove('<?php echo $product['key']; ?>');">
-                                            <i class="fa fa-times-circle"></i></button></span>
-                                        </div></td><td class="text-center price-cart-col"><?php echo $product['price']; ?></td>
-                                    <td class="text-right"><?php echo $product['total']; ?></td>
+                                            <div class='plus'>+</div>
+                                        </div>
+                                        </td>
+                                    <td class="text-center price-cart-col"><?php echo $product['price']; ?></td>
+                                    <td class="text-center total-cart-col"><?php echo $product['total']; ?></td>
+                                    <td class="text-center delete-cart-col">
+                                        <div data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="cart-main-remove" onclick="cart.remove('<?php echo $product['key']; ?>');">
+                                            <i class="material-icons">delete_forever</i>
+                                        </div>
+                                    </td>
                                 </tr>
                             <?php } ?>
                             </tbody>
@@ -125,6 +131,7 @@
             <div class="row" id="checkout-form">
                 <div class="<?php echo $settings['buy_form_design']?'col-sm-6 col-sm-offset-3':'col-sm-6' ?>">
                     <div class="chekout-box-item">
+                        <div class="row"></div>
                         <h3 class='checkout-title-text'>Личные данные</h3>
                         <?php if($settings['buy_form_headings']){ ?>
                         <div class="form-group">
@@ -299,7 +306,9 @@
                 </div>
                 <div class="col-sm-6">
                 <div class="chekout-box-item">
-                    <h3 class='checkout-title-text'>Адрес доставки</h3>
+                    <div class="row">
+                        <h3 class='checkout-title-text'>Адрес доставки</h3>
+                    </div>
                 <?php } ?>
                     <?php if($settings['buy_form_headings']){ ?>
                     <div class="form-group">
@@ -521,7 +530,7 @@
                         <br />
                         <div class="buttons">
                             <div class="text-center">
-                                <input type="button" value="<?php echo $button_order; ?>" id="button-order" data-loading-text="<?php echo $text_loading; ?>" class="btn btn-success btn-lg" />
+                                <input type="button" value="<?php echo $button_order; ?>" id="button-order" data-loading-text="<?php echo $text_loading; ?>" class="" />
                             </div>
                             <div id="payment-form"></div>
                         </div>

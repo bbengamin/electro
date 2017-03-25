@@ -1502,7 +1502,7 @@ class ControllerCheckoutBuy extends Controller {
                 $json = array();
                 $json['totals'] = '';
                 foreach ($total_data as $total) {
-                    $json['totals'] .= '<tr class="total-item"><td colspan="4" style="border:none;"> </td><td class="text-right"><strong>'.$total['title'].'</strong></td><td class="text-right">'.$this->currency->format($total['value']).'</td></tr>';
+                    $json['totals'] .= '<tr class="total-item"><td class="text-right"><strong>'.$total['title'].'</strong></td><td class="text-right">'.$this->currency->format($total['value']).'</td></tr>';
                 }
                 
                 $this->response->setOutput(json_encode($json));
