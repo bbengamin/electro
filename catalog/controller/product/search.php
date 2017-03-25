@@ -1,5 +1,78 @@
 <?php
 class ControllerProductSearch extends Controller {
+	
+	public function liveSearch() {
+		$this->load->model('catalog/product');
+
+		$this->load->model('tool/image');
+		
+		if (isset($this->request->get['search'])) {
+			$search = $this->request->get['search'];
+		} else {
+			$search = '';
+		}
+		
+		$sort = 'p.sort_order';
+		$order = 'ASC';
+		
+		$filter_data = array(
+			'filter_name'         => $search,
+			'filter_tag'          => $search,
+			'filter_description'  => true,
+			'filter_category_id'  => 0,
+			'filter_sub_category' => 1,
+			'sort'                => $sort,
+			'order'               => $order,
+			'start'               => 0,
+			'limit'               => 3
+		);
+
+		$product_total = $this->model_catalog_product->getTotalProducts($filter_data);
+
+		$results = $this->model_catalog_product->getProducts($filter_data);
+		$data = array();
+		$data['products'] = array();
+		$data['more'] = $this->url->link("product/search", "search=" . $search . "&description=true");
+		$data['count'] = $product_total;
+		
+		foreach ($results as $result) {
+			if ($result['image']) {
+				$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+			} else {
+				$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+			}
+
+			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+				$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+			} else {
+				$price = false;
+			}
+
+			if ((float)$result['special']) {
+				$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
+			} else {
+				$special = false;
+			}
+
+			$data['products'][] = array(
+				'product_id'  => $result['product_id'],
+				'thumb'       => $image,
+				'name'        => $result['name'],
+				'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
+				'price'       => $price,
+				'special'     => $special,
+				'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
+				'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
+			);
+		}
+		
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/live_search.tpl')) {
+			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/product/live_search.tpl', $data));
+		} else {
+			$this->response->setOutput($this->load->view('default/template/product/live_search.tpl', $data));
+		}
+	}
+	
 	public function index() {
 		$this->load->language('product/search');
 

@@ -162,6 +162,20 @@
                 </div>
               </div>
               <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-show_home"><span data-toggle="tooltip" title="<?php echo $help_top; ?>">Плказывать на главной</span></label>
+                <div class="col-sm-10">
+                  <div class="checkbox">
+                    <label>
+                      <?php if ($show_home) { ?>
+                      <input type="checkbox" name="show_home" value="1" checked="checked" id="input-show_home" />
+                      <?php } else { ?>
+                      <input type="checkbox" name="show_home" value="1" id="input-show_home" />
+                      <?php } ?>
+                      &nbsp; </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-column"><span data-toggle="tooltip" title="<?php echo $help_column; ?>"><?php echo $entry_column; ?></span></label>
                 <div class="col-sm-10">
                   <input type="text" name="column" value="<?php echo $column; ?>" placeholder="<?php echo $entry_column; ?>" id="input-column" class="form-control" />

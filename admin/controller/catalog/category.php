@@ -479,6 +479,14 @@ class ControllerCatalogCategory extends Controller {
 		} else {
 			$data['top'] = 0;
 		}
+		
+		if (isset($this->request->post['show_home'])) {
+			$data['show_home'] = $this->request->post['show_home'];
+		} elseif (!empty($category_info)) {
+			$data['show_home'] = $category_info['show_home'];
+		} else {
+			$data['show_home'] = 0;
+		}
 
 		if (isset($this->request->post['column'])) {
 			$data['column'] = $this->request->post['column'];

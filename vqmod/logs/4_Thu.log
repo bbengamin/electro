@@ -1,0 +1,12 @@
+---------- Date: 2017-03-23 01:02:59 ~ IP : 10.240.1.4 ----------
+REQUEST URI : /
+MOD DETAILS:
+   modFile   : /home/ubuntu/workspace/vqmod/xml/mega_filter.xml
+   id        : Mega Filter PRO
+   version   : 1.5.x
+   vqmver    : 2.4.0
+   author    : marsilea15@gmail.com
+VQModObject::parseMods - Could not resolve path for [catalog/controller/module/mega_filter.php] (SKIPPED)
+----------------------------------------------------------------------
+
+
