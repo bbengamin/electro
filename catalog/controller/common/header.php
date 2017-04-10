@@ -1,6 +1,60 @@
 <?php
 class ControllerCommonHeader extends Controller {
 	public function index() {
+		
+		if (isset($this->request->get['manufacturer_id'])) {
+			$data['manufacturer_id'] = (int)$this->request->get['manufacturer_id'];
+		} else {
+			$data['manufacturer_id'] = false;
+		}
+		
+		if (isset($this->request->get['sort'])) {
+			$data['sort'] = $this->request->get['sort'];
+		} else {
+			$data['sort'] = 'p.sort_order';
+		}
+
+		if (isset($this->request->get['order'])) {
+			$data['morder'] = $this->request->get['order'];
+		} else {
+			$data['morder'] = 'ASC';
+		}
+		
+		if (isset($this->request->get['search'])) {
+			$data['msearch'] = $this->request->get['search'];
+		} else {
+			$data['msearch'] = false;
+		}
+	
+		if(isset($this->request->get['path'])){
+			$data['path'] = $this->request->get['path'];
+		}else{
+			$data['path'] = false;
+		}
+		
+		if(isset($this->request->get['page'])){
+			$data['page'] = $this->request->get['page'];
+		}else{
+			$data['page'] = 1;
+		}
+		
+		if(isset($this->request->get['route'])){
+			$data['route'] = $this->request->get['route'];
+			
+			if($this->request->get['route'] == "product/search"){
+				$data['mode'] = 'search';
+			}else if($this->request->get['route'] == "product/manufacturer/info"){
+				$data['mode'] = 'manufacturer';
+			}else if($this->request->get['route'] == "product/category"){
+				$data['mode'] = 'category';
+			}else if($this->request->get['route'] == "product/special"){
+				$data['mode'] = 'special';
+			}
+		}else{
+			$data['route'] = false;
+			$data['mode'] = false;
+		}
+		
 		// Analytics
 		$this->load->model('extension/extension');
 
@@ -54,14 +108,13 @@ class ControllerCommonHeader extends Controller {
 		if ($this->customer->isLogged()) {
 			$this->load->model('account/wishlist');
 
+			$data['text_logged'] = $this->customer->getFirstName();
 			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), $this->model_account_wishlist->getTotalWishlist());
 		} else {
 			$data['text_wishlist'] = sprintf($this->language->get('text_wishlist'), (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0));
 		}
 
 		$data['text_shopping_cart'] = $this->language->get('text_shopping_cart');
-		$data['text_logged'] = sprintf($this->language->get('text_logged'), $this->url->link('account/account', '', 'SSL'), $this->customer->getFirstName(), $this->url->link('account/logout', '', 'SSL'));
-
 		$data['text_account'] = $this->language->get('text_account');
 		$data['text_register'] = $this->language->get('text_register');
 		$data['text_login'] = $this->language->get('text_login');
@@ -107,6 +160,7 @@ class ControllerCommonHeader extends Controller {
 		$this->load->model('catalog/category');
 
 		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
 
 		$data['categories'] = array();
 
@@ -130,9 +184,16 @@ class ControllerCommonHeader extends Controller {
 						'href'  => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
 					);
 				}
+				
+				if ($category['image']) {
+					$image = $this->model_tool_image->resize($category['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+				} else {
+					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+				}
 
 				// Level 1
 				$data['categories'][] = array(
+					'image'     => $image,
 					'name'     => $category['name'],
 					'children' => $children_data,
 					'column'   => $category['column'] ? $category['column'] : 1,

@@ -47,6 +47,15 @@
         <?php } ?>
         <div class="<?php echo $class; ?>">
           <h1 class='product-title'><?php echo $heading_title; ?></h1>
+          <?php if($data['bestseller']) { ?>
+                <span>Хит продаж</span>
+              <?php } ?>
+              <?php if($data['sale']) { ?>
+                <span>Акция</span>
+              <?php } ?>
+              <?php if($data['latest']) { ?>
+                <span>Новинка</span>
+              <?php } ?>
           <ul class="list-unstyled product-up-atributes">
             <?php if ($manufacturer) { ?>
             <li><span class='prod-up-text prod-up-text-left'><?php echo $text_manufacturer; ?></span> <span class='prod-up-text prod-up-text-right'><a href="<?php echo $manufacturers; ?>"><?php echo $manufacturer; ?></span></a></li>
@@ -263,6 +272,7 @@
               <?php } ?>
             </div>
             <a id='look-all-attributes'>Посмотреть все характеристики</a>
+            <div class='view_now'>Данный товар просматривают<span> <?php echo $view_now; ?> </span>человек(а)</div>
             <div class="button-group-category">
                 <div class="left-product-btns">
                   <input type="hidden" name="quantity" value="<?php echo $minimum; ?>" size="2" id="input-quantity" class="form-control" />
@@ -366,14 +376,43 @@
       </div>
       <?php if ($products) { ?>
       <h3 class='related-title'><?php echo $text_related; ?></h3>
-      <div class="row">
+      <div class="row owl-carousel" id='related-products'>
         <?php $i = 0; ?>
         <?php foreach ($products as $product) { ?>
-        
-        <div class="product-layout product-grid col-xs-12 col-sm-6 col-md-3">
+        <div class="product-layout item">
           <div class="product-thumb">
             <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
-            <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a></div>
+            
+            <div class="images-box-category">
+                <div class="image">
+                  <div class="marks-box">
+                    <?php if($product['bestseller']) { ?>
+                      <span class='marks hit-mark'>Хит продаж</span>
+                    <?php } ?>
+                    <?php if($product['sale']) { ?>
+                      <span class='marks special-mark'>Акция</span>
+                    <?php } ?>
+                    <?php if($product['latest']) { ?>
+                      <span class='marks latest-mark'>Новинка</span>
+                    <?php } ?>
+                  </div>
+                  <a href="<?php echo $product['href']; ?>">
+                    <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" />
+                  </a>
+                </div>
+                
+                <div class="category-additional-images">
+                <ul class="additional-categoey-img-box list-unstyled">
+                 <?php foreach ($product['images'] as $image) { ?>
+                  <li>
+                    <a href="<?php echo $image['popup']; ?>" data-fancybox="<?php echo $product['product_id']; ?>" data-caption="<?php echo $product['name']; ?>">
+                      <img src="<?php echo $image['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" />
+                    </a>
+                  </li>
+                 <?php } ?>
+                </ul>
+              </div>
+            </div>
             <div>
               <div class="caption">
                 <?php if ($product['price']) { ?>
@@ -514,15 +553,12 @@ $('#button-cart').on('click', function() {
 				$('.text-danger').parent().addClass('has-error');
 			}
 
-			if (json['success']) {
-				$('.breadcrumb').after('<div class="alert alert-success">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>');
-
-				$//('#cart > button').html('<i class="fa fa-shopping-cart"></i> ' + json['total']);
+  		if (json['form']) {
 				$('#cart-total').html(json['total']);
-
 				$('html, body').animate({ scrollTop: 0 }, 'slow');
-
-				//$('#cart > ul').load('index.php?route=common/cart/info ul li');
+				
+				$('#modal-after-body').html(json['form']);
+				$('#modal-after').modal('show');
 			}
 		},
         error: function(xhr, ajaxOptions, thrownError) {
@@ -662,4 +698,13 @@ $('#look-all-attributes').on('click',function(){
   $('a[href="#tab-specification"]').trigger("click");
 });
 //--></script>
+<script type="text/javascript"><!--
+$('#related-products').owlCarousel({
+	items: 4,
+	autoPlay: 3000,
+	navigation: true,
+	navigationText: ['<i class="fa fa-chevron-left fa-5x"></i>', '<i class="fa fa-chevron-right fa-5x"></i>'],
+	pagination: false
+});
+--></script>
 <?php echo $footer; ?>

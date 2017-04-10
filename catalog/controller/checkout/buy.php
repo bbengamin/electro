@@ -208,7 +208,7 @@ class ControllerCheckoutBuy extends Controller {
                     'option' => $option_data,
                     'recurring' => $recurring,
                     'quantity' => $product['quantity'],
-                    'stock' => $product['stock'] ? true : !(!$this->config->get('config_stock_checkout') || $this->config->get('config_stock_warning')),
+                    'stock' => $product['stock'] ? true : false,
                     'reward' => ($product['reward'] ? sprintf($this->language->get('text_points'), $product['reward']) : ''),
                     'price' => $price,
                     'total' => $total,

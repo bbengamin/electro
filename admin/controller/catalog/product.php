@@ -938,6 +938,38 @@ class ControllerCatalogProduct extends Controller {
 		} else {
 			$data['status'] = true;
 		}
+		
+		if (isset($this->request->post['latest'])) {
+			$data['latest'] = $this->request->post['latest'];
+		} elseif (!empty($product_info)) {
+			$data['latest'] = $product_info['latest'];
+		} else {
+			$data['latest'] = true;
+		}
+		
+		if (isset($this->request->post['bestseller'])) {
+			$data['bestseller'] = $this->request->post['bestseller'];
+		} elseif (!empty($product_info)) {
+			$data['bestseller'] = $product_info['bestseller'];
+		} else {
+			$data['bestseller'] = false;
+		}
+		
+		if (isset($this->request->post['sale'])) {
+			$data['sale'] = $this->request->post['sale'];
+		} elseif (!empty($product_info)) {
+			$data['sale'] = $product_info['sale'];
+		} else {
+			$data['sale'] = false;
+		}
+		
+		if (isset($this->request->post['bought'])) {
+			$data['bought'] = $this->request->post['bought'];
+		} elseif (!empty($product_info)) {
+			$data['bought'] = $product_info['bought'];
+		} else {
+			$data['bought'] = false;
+		}
 
 		if (isset($this->request->post['weight'])) {
 			$data['weight'] = $this->request->post['weight'];

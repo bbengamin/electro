@@ -8,7 +8,7 @@
           <?php foreach ($informations as $information) { ?>
           <li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
           <?php } ?>
-           <!-- <li><a href="<?php echo $special; ?>"><?php echo $text_special; ?></a></li> -->
+           <li><a href="/special"><?php echo $text_special; ?></a></li>
         </ul>
       </div>
       <?php } ?>
@@ -46,6 +46,10 @@
 <!--    <hr>
     <p><?php echo $powered; ?></p>-->
   </div>
+  
+  <div class="bought hidden">
+    <?php echo $bought; ?>
+  </div>
 </footer>
 
 <!-- modal-call-back-header -->
@@ -77,13 +81,24 @@
   </div>
 </div>
 
+<!-- Modal after-->
+<div class="modal" id="modal-after" tabindex="-1" role="dialog" aria-labelledby="call-back-modal-Label" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="modal-body" id="modal-after-body">
+
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div class='left-side'>
   <div class='button-up'><span>Вверх <i class="material-icons">keyboard_arrow_up</i></span></div>
 </div>
-<script>
-  $('input[name="phone"]').mask("+38(099)999-99-99")
-  $('input[name="telephone"]').mask("+38(099)999-99-99")
-</script>
-<script crossorigin="anonymous" async type="text/javascript" src="//api.pozvonim.com/widget/callback/v3/a3fa4103fc741f384a127fa598aa51db/connect" id="check-code-pozvonim" charset="UTF-8"></script>
+
+<script crossorigin="anonymous" async type="text/javascript" src="//api.pozvonim.com/widget/callback/v3/a3fa4103fc741f384a127fa598aa51db/connect" id="check-code-pozvonim" charset="UTF-8"></script> 
 </body></html>

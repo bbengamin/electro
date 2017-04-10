@@ -150,13 +150,25 @@ class ControllerProductProduct extends Controller {
 
 		if (isset($this->request->get['product_id'])) {
 			$product_id = (int)$this->request->get['product_id'];
+			
+			if(!isset($this->session->data['viewed'])){
+				$this->session->data['viewed'] = array();
+				$this->session->data['viewed'][$product_id] = $product_id;
+			} else if(!isset($this->session->data['viewed'][$product_id])){
+				$this->session->data['viewed'][$product_id] = $product_id;
+			}
 		} else {
 			$product_id = 0;
 		}
+		
 
 		$this->load->model('catalog/product');
 
 		$product_info = $this->model_catalog_product->getProduct($product_id);
+		
+		$data['sale']		= $product_info['sale'];
+		$data['bestseller'] = $product_info['bestseller'];
+		$data['latest']		= $product_info['latest'];
 
 		if ($product_info) {
 			$url = '';
@@ -269,6 +281,7 @@ class ControllerProductProduct extends Controller {
 			$data['model'] = $product_info['model'];
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
+			$data['view_now'] = $product_info['view_now'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
 
 			/*if ($product_info['quantity'] <= 0 || $product_info['stock_status']) {
@@ -299,6 +312,7 @@ class ControllerProductProduct extends Controller {
 			}
 
 			$data['images'] = array();
+
 
 			$results = $this->model_catalog_product->getProductImages($this->request->get['product_id']);
 
@@ -408,6 +422,8 @@ class ControllerProductProduct extends Controller {
 			$data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
 
 			$data['products'] = array();
+			
+			
 
 			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
 
@@ -416,6 +432,17 @@ class ControllerProductProduct extends Controller {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height'));
 				} else {
 					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_related_width'), $this->config->get('config_image_related_height'));
+				}
+				
+				$images = array();
+
+				$results_img = $this->model_catalog_product->getProductImages($result['product_id']);
+		
+				foreach ($results_img as $result_img) {
+					$images[] = array(
+						'popup' => $this->model_tool_image->resize($result_img['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+						'thumb' => $this->model_tool_image->resize($result_img['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+					);
 				}
 
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -430,28 +457,18 @@ class ControllerProductProduct extends Controller {
 					$special = false;
 				}
 
-				if ($this->config->get('config_tax')) {
-					$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
-				} else {
-					$tax = false;
-				}
-
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$result['rating'];
-				} else {
-					$rating = false;
-				}
-
 				$data['products'][] = array(
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
+					'images'       => $images,
 					'name'        => $result['name'],
+					'bestseller'  => $result['bestseller'],
+					'latest'      => $result['latest'],
+					'sale'        => $result['sale'],
 					'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 					'price'       => $price,
 					'special'     => $special,
-					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
-					'rating'      => $rating,
 					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
 				);
 			}

@@ -6,15 +6,17 @@
 <?php foreach ($shipping_methods as $shipping_method) { ?>
 <?php if (!$shipping_method['error']) { ?>
 <?php foreach ($shipping_method['quote'] as $quote) { ?>
-<div class="radio">
-  <label>
-    <?php if ($quote['code'] == $code || !$code) { ?>
+<div class="radio new-input-box">
+  <?php if ($quote['code'] == $code || !$code) { ?>
     <?php $code = $quote['code']; ?>
-    <input type="radio" name="shipping_method" value="<?php echo $quote['code']; ?>" checked="checked" data-cost="<?php echo $quote['cost']; ?>" />
+    <input type="radio" name="shipping_method" id='<?php echo $quote['code']; ?>' value="<?php echo $quote['code']; ?>" checked="checked" data-cost="<?php echo $quote['cost']; ?>" />
     <?php } else { ?>
-    <input type="radio" name="shipping_method" value="<?php echo $quote['code']; ?>" data-cost="<?php echo $quote['cost']; ?>" />
+    <input type="radio" name="shipping_method" id='<?php echo $quote['code']; ?>' value="<?php echo $quote['code']; ?>" data-cost="<?php echo $quote['cost']; ?>" />
     <?php } ?>
-    <?php echo $quote['title']; ?> - <?php echo $quote['text']; ?></label>
+    
+  <label for='<?php echo $quote['code']; ?>'>
+    <?php echo $quote['title']; ?> - <?php echo $quote['text']; ?>
+  </label>
 </div>
 <?php } ?>
 <?php } else { ?>

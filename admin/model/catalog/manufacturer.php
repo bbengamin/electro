@@ -1,10 +1,21 @@
 <?php
 class ModelCatalogManufacturer extends Model {
+	private function translit($text){
+		$ru = explode('-', "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я"); 
+		$en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch---Y-y---E-e-YU-yu-YA-ya");
+
+	 	$res = str_replace($ru, $en, $text);
+		$res = preg_replace("/[\s]+/ui", '-', $res);
+		$res = strtolower(preg_replace("/[^0-9a-zа-я\-]+/ui", '', $res));
+	    return $res;  
+	}
 	public function addManufacturer($data) {
 		$this->event->trigger('pre.admin.manufacturer.add', $data);
 
 		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($data['name']) . "', sort_order = '" . (int)$data['sort_order'] . "'");
-
+		if (isset($data['keyword']) && empty($data['keyword'])) {
+			$data['keyword'] = $this->translit($data['name']);
+		}
 		$manufacturer_id = $this->db->getLastId();
 
 		if (isset($data['image'])) {
@@ -32,7 +43,9 @@ class ModelCatalogManufacturer extends Model {
 		$this->event->trigger('pre.admin.manufacturer.edit', $data);
 
 		$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($data['name']) . "', sort_order = '" . (int)$data['sort_order'] . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-
+		if (isset($data['keyword']) && empty($data['keyword'])) {
+			$data['keyword'] = $this->translit($data['name']);
+		}
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape($data['image']) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		}

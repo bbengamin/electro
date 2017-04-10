@@ -37,7 +37,6 @@ class ControllerCommonFooter extends Controller {
 		$data['return'] = $this->url->link('account/return/add', '', 'SSL');
 		$data['sitemap'] = $this->url->link('information/sitemap');
 		$data['manufacturer'] = $this->url->link('product/manufacturer');
-		$data['voucher'] = $this->url->link('account/voucher', '', 'SSL');
 		$data['affiliate'] = $this->url->link('affiliate/account', '', 'SSL');
 		$data['special'] = $this->url->link('product/special');
 		$data['account'] = $this->url->link('account/account', '', 'SSL');
@@ -45,7 +44,11 @@ class ControllerCommonFooter extends Controller {
 		$data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
 		$data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
 
-		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
+		// Bought
+		$bought = $this->db->query("SELECT * FROM `oc_setting` WHERE store_id = '0' AND `code` = 'cron' AND `key`= 'bought'");
+		$data['bought'] = $bought->row['value'];
+		
+		
 
 		// Whos Online
 		if ($this->config->get('config_customer_online')) {

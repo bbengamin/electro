@@ -134,7 +134,12 @@
         </fieldset>
         <div class="buttons">
           <div class="pull-right">
-            <input class="btn btn-primary" type="submit" value="<?php echo $button_submit; ?>" />
+           
+            <label for='login-input' class="login-page-btns">
+                   <input id='login-input' class='hidden' type="submit" value="<?php echo $button_submit; ?>" />
+                  <span>Отправить сообщение <i class="material-icons">send</i></span>
+                  
+                </label>
           </div>
         </div>
       </form>

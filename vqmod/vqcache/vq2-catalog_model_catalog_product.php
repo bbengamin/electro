@@ -47,9 +47,14 @@ class ModelCatalogProduct extends Model {
 				'minimum'          => $query->row['minimum'],
 				'sort_order'       => $query->row['sort_order'],
 				'status'           => $query->row['status'],
+				'bestseller'       => $query->row['bestseller'],
+				'latest'           => $query->row['latest'],
+				'sale'             => $query->row['sale'],
+				'bought'           => $query->row['bought'],
 				'date_added'       => $query->row['date_added'],
 				'date_modified'    => $query->row['date_modified'],
-				'viewed'           => $query->row['viewed']
+				'viewed'           => $query->row['viewed'],
+				'view_now'         => $query->row['view_now']
 			);
 		} else {
 			return false;
@@ -387,8 +392,25 @@ class ModelCatalogProduct extends Model {
 		return $query->rows;
 	}
 
-	public function getProductImages($product_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
+	public function getProductImages($product_id, $limit = true) {
+		$sql = "SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC";
+		
+		if($limit){
+			$sql .= " LIMIT 0, 4";
+		}
+
+
+				if( in_array( __FUNCTION__, array( 'getProducts', 'getTotalProducts', 'getProductSpecials', 'getTotalProductSpecials' ) ) ) {					
+					if( ! empty( $this->request->get['mfp'] ) || ( NULL != ( $mfSettings = $this->config->get('mega_filter_settings') ) && ! empty( $mfSettings['in_stock_default_selected'] ) ) ) {
+						if( empty( $data['mfp_disabled'] ) ) {
+							$this->load->model( 'module/mega_filter' );
+					
+							$sql = MegaFilterCore::newInstance( $this, $sql )->getSQL( __FUNCTION__ );
+						}
+					}
+				}
+			
+		$query = $this->db->query($sql);
 
 		return $query->rows;
 	}

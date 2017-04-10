@@ -1,6 +1,6 @@
 <?php
 class ControllerProductProductsAjax extends Controller {
-	public function index() {
+	public function category() {
 	$data = array();
 	
 		$this->load->model('catalog/product');
@@ -31,11 +31,8 @@ class ControllerProductProductsAjax extends Controller {
 			$page = 1;
 		}
 
-		if (isset($this->request->get['limit'])) {
-			$limit = (int)$this->request->get['limit'];
-		} else {
-			$limit = $this->config->get('config_product_limit');
-		}
+		
+		$limit = $this->config->get('config_product_limit');
 		
 		$fmSettings = $this->config->get('mega_filter_settings');
 				
@@ -81,10 +78,6 @@ class ControllerProductProductsAjax extends Controller {
 				$url .= '&order=' . $this->request->get['order'];
 			}
 
-			if (isset($this->request->get['limit'])) {
-				$url .= '&limit=' . $this->request->get['limit'];
-			}
-			
 			if( ! empty( $this->request->get['mfp'] ) ) {
 				$url .= '&mfp=' . $this->request->get['mfp'];
 			}

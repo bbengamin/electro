@@ -14,7 +14,7 @@
       <div class='category-title title-category-upper'>
         <h2>Популярные категории</h2>
       </div>
-      <div class="home-category-select clearfix">
+      <div class="home-category-select clearfix row">
         <?php foreach($categories as $category){ ?>
         <div class="category-item-home-p-wrap col-sm-3">
           <div class='category-item' data-id="<?php echo $category['category_id']; ?>">

@@ -1,9 +1,13 @@
 <div class="clearfix">
   <div class='home-products-name category-title'>
     <h2>
-      <a class='more-link' href='<?php echo $more; ?>'><?php echo $name; ?></a>
+      <a class='more-link' href='<?php echo $more; ?>'><span class='popular-from'>Популярные товары из категории:</span> <?php echo $name; ?> </a>
     </h2>
+    <div class='more'>
+      <a class='more-link watches-more' href='<?php echo $more; ?>'>Смотреть все <i class="material-icons">arrow_forward</i></a>
+    </div>
   </div>
+  <div class="row">
   <?php foreach ($products as $product) { ?>
   <div class="product-layout product-grid col-xs-12 col-sm-6 col-md-3">
     <div class="product-thumb">
@@ -37,7 +41,13 @@
     </div>
   </div>
   <?php } ?>
+  </div>
 </div>
-<div class='more'>
-  <a class='more-link' href='<?php echo $more; ?>'>Смотреть все</a>
-</div>
+<!--<div class='home-products-name category-title'>
+  <h2>
+    <a class='more-link' href='<?php echo $more; ?>'><span class='popular-from'>Категория:</span> <?php echo $name; ?> </a>
+  </h2>
+  <div class='more'>
+    <a class='more-link watches-more' href='<?php echo $more; ?>'>Перейти в категорию <i class="material-icons">arrow_forward</i></a>
+  </div>
+</div>-->

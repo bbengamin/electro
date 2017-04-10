@@ -24,6 +24,7 @@
 <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,400i,300,700" rel="stylesheet" type="text/css" />
+<link href="/catalog/view/theme/default/stylesheet/jquery.fancybox.min.css" rel="stylesheet">
 
 <?php foreach ($styles as $style) { ?>
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
@@ -34,14 +35,21 @@
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
 <?php } ?>
 <link href="catalog/view/theme/default/stylesheet/stylesheet.css" rel="stylesheet">
+<link href="catalog/view/theme/default/stylesheet/media.css" rel="stylesheet">
 <?php foreach ($scripts as $script) { ?>
 <script src="<?php echo $script; ?>" type="text/javascript"></script>
 <?php } ?>
+<script src="/catalog/view/javascript/jquery.fancybox.min.js" type="text/javascript"></script>
 <?php foreach ($analytics as $analytic) { ?>
 <?php echo $analytic; ?>
 <?php } ?>
 </head>
 <body>
+  <!--preloader start-->
+  <div id="page-preloader" class="block" style="background: #fff;">
+   <div class="gear"></div> 
+  </div>
+  <!--preloader end-->
   <header class='fixed-head'>
       <div class='left-row-head'>
         <div class="header-black-background"></div>
@@ -55,10 +63,10 @@
           <div class='logo'>
             <div id="logo">
               <?php if ($logo) { ?>
-              <a href="<?php echo $home; ?>" class='logo-no-scroll'><img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" /></a>
-              <a href="<?php echo $home; ?>" class='logo-on-scroll'><img src="/catalog/view/theme/default/image/logo_png_white.png" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" /></a>
+              <a href="/" class='logo-no-scroll'><img src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" /></a>
+              <a href="/" class='logo-on-scroll'><img src="/catalog/view/theme/default/image/logo_png_white.png" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" /></a>
               <?php } else { ?>
-              <h1><a href="<?php echo $home; ?>"><?php echo $name; ?></a></h1>
+              <h1><a href="/"><?php echo $name; ?></a></h1>
               <?php } ?>
             </div>
           </div>
@@ -69,24 +77,16 @@
                   <li><a href='/'>Главная</a></li>
                   <li><a href='/about'>О магазине</a></li>
                   <li><a href='/delivery_payment'>Доставка и оплата</a></li>
-                  <li><a href="<?php echo $contact; ?>">Контакты</a></li>
+                  <li><a href="/contact">Контакты</a></li>
                   <li><a href='/special'>Акции</a></li>
-                  <li><a href=''><i class="material-icons">access_time</i> <span>Пн-Сб с 9:00 до 20:00</span></a></li>
+                  <!-- <li><a href=''><i class="material-icons">access_time</i> <span>Пн-Сб с 9:00 до 20:00</span></a></li> -->
                 </ul>
                 <ul class="list-unstyled head-right-menu">
-                  <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>"><i class="material-icons">perm_identity</i> <span class=""><?php echo $text_account; ?></span></a>
-                    <!--<ul class="dropdown-menu dropdown-menu-right">
-                      <?php if ($logged) { ?>
-                      <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
-                      <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
-                      <li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>
-                      <li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>
-                      <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
-                      <?php } else { ?>
-                      <li><a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
-                      <li><a href="<?php echo $login; ?>"><?php echo $text_login; ?></a></li>
-                      <?php } ?>
-                    </ul>-->
+                  <?php if ($logged) { ?>
+                    <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_logged; ?>"><i class="material-icons">perm_identity</i> <span class="">Здравствуйте, <?php echo $text_logged; ?></span></a>
+                  <?php } else { ?>
+                    <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>"><i class="material-icons">perm_identity</i> <span class=""><?php echo $text_account; ?></span></a>
+                  <?php } ?>
                   </li>
                 </ul>
               </div>
@@ -128,39 +128,10 @@
   </header>  
 
 <body class="<?php echo $class; ?>">
-<!--<nav id="top">
-  <div class="container">
-    <?php echo $currency; ?>
-    <?php echo $language; ?>
-    <div id="top-links" class="nav pull-right">
-      <ul class="list-inline">
-        <li><a href="<?php echo $contact; ?>"><i class="fa fa-phone"></i></a> <span class="hidden-xs hidden-sm hidden-md"><?php echo $telephone; ?></span></li>
-        <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_account; ?></span> <span class="caret"></span></a>
-          <ul class="dropdown-menu dropdown-menu-right">
-            <?php if ($logged) { ?>
-            <li><a href="<?php echo $account; ?>"><?php echo $text_account; ?></a></li>
-            <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
-            <li><a href="<?php echo $transaction; ?>"><?php echo $text_transaction; ?></a></li>
-            <li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>
-            <li><a href="<?php echo $logout; ?>"><?php echo $text_logout; ?></a></li>
-            <?php } else { ?>
-            <li><a href="<?php echo $register; ?>"><?php echo $text_register; ?></a></li>
-            <li><a href="<?php echo $login; ?>"><?php echo $text_login; ?></a></li>
-            <?php } ?>
-          </ul>
-        </li>
-        <li><a href="<?php echo $wishlist; ?>" id="wishlist-total" title="<?php echo $text_wishlist; ?>"><i class="fa fa-heart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_wishlist; ?></span></a></li>
-        <li><a href="<?php echo $shopping_cart; ?>" title="<?php echo $text_shopping_cart; ?>"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_shopping_cart; ?></span></a></li>
-        <li><a href="<?php echo $checkout; ?>" title="<?php echo $text_checkout; ?>"><i class="fa fa-share"></i> <span class="hidden-xs hidden-sm hidden-md"><?php echo $text_checkout; ?></span></a></li>
-      </ul>
-    </div>
-  </div>
-</nav>-->
 <header>
   <div class="container">
     <div class="row">
       <div class="col-sm-4">
-       
       </div>
       <div class="col-sm-5"><?php echo $search; ?>
       </div>
@@ -188,6 +159,9 @@
                 <?php } ?>
               </ul>
               <?php } ?>
+              <div class="category-menu-img-box" style='background: url("<?php echo $category['image']; ?>") no-repeat center;'>
+                
+              </div>
             </div>
             
         </li>
@@ -200,3 +174,17 @@
   </nav>
 </div>
 <?php } ?>
+<script>
+$(document).ready(function() {
+  Application.route = '<?php echo $route; ?>';
+  Application.path = '<?php echo $path; ?>';
+  Application.mode = '<?php echo $mode; ?>';
+  Application.page = '<?php echo $page; ?>';
+  Application.msort = '<?php echo $sort; ?>';
+  Application.order = '<?php echo $morder; ?>';
+  Application.search = '<?php echo $msearch; ?>';
+  Application.manufacturer = '<?php echo $manufacturer_id; ?>';
+  
+  Application.init();
+});
+</script>

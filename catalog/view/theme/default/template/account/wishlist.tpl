@@ -50,8 +50,18 @@
                 <?php } ?>
               </div>
               <?php } ?></td>
-            <td class="text-right"><button type="button" onclick="cart.add('<?php echo $product['product_id']; ?>');" data-toggle="tooltip" title="<?php echo $button_cart; ?>" class="btn btn-primary"><i class="fa fa-shopping-cart"></i></button>
-              <a href="<?php echo $product['remove']; ?>" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="btn btn-danger"><i class="fa fa-times"></i></a></td>
+            <td class="text-right">
+              
+              
+              <div class="buttons-holder">
+              <a  onclick="cart.add('<?php echo $product['product_id']; ?>');" data-toggle="tooltip" title="<?php echo $button_cart; ?>" class="new-butons-item edit-info-btn">
+                <i class="material-icons">add_shopping_cart</i>
+              </a> 
+              <a href="<?php echo $product['remove']; ?>" data-toggle="tooltip" title="<?php echo $button_remove; ?>" class="new-butons-item delete-info-btn">
+               <i class="material-icons">delete_forever</i>
+              </a>
+            </div>
+            </td>
           </tr>
           <?php } ?>
         </tbody>
@@ -60,7 +70,7 @@
       <p><?php echo $text_empty; ?></p>
       <?php } ?>
       <div class="buttons clearfix">
-        <div class="pull-right"><a href="<?php echo $continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
+        <div class="pull-right"><a href="<?php echo $continue; ?>" class="login-page-btns"><?php echo $button_continue; ?></a></div>
       </div>
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>
