@@ -106,7 +106,7 @@
           </div>
           <div class='row-cart'>
             <div class="call-back-wrap">
-              <a href='#' class='call-back-header' data-toggle="modal" data-target="#modal-call-back-header"><i class="material-icons">phone_in_talk</i> <span>Перезвоните мне</span></a>
+              <a class='call-back-header' ><i class="material-icons">phone_in_talk</i> <span>Перезвоните мне</span></a>
             </div>
             <div class="cart-wl-head-wrap">
               <!--<div class="wl-head-wrap">

@@ -168,6 +168,9 @@ $(window).on('load', function () {
 });
 
 $(document).ready(function() {
+	$('.call-back-header').on('click', function(e) {
+		$('.pozvonim-button-border-inner').trigger('click');  
+	})
 
 	function drawLeftSide(){
 		var contentWidth = $('.content-row.container').width();
