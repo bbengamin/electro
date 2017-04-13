@@ -306,7 +306,7 @@
 	vertical-align: middle;
 }
 label.mfilter-tb-as-td {
-	word-break: break-all;
+	    word-break: break-word;
 }
 .mfilter-tb .mfilter-tb-as-tr:first-child > .mfilter-tb-as-td,
 .mfilter-tb .mfilter-tb-as-tr.mfilter-first-child > .mfilter-tb-as-td {
