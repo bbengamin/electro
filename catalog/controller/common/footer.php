@@ -48,6 +48,11 @@ class ControllerCommonFooter extends Controller {
 		$bought = $this->db->query("SELECT * FROM `oc_setting` WHERE store_id = '0' AND `code` = 'cron' AND `key`= 'bought'");
 		$data['bought'] = $bought->row['value'];
 		
+		if(isset($this->request->get['route']) && $this->request->get['route'] == 'product/product'){
+			$data['product_chat_mode'] = true;
+		}else{
+			$data['product_chat_mode'] = false;
+		}
 		
 
 		// Whos Online

@@ -302,6 +302,7 @@ class MegaFilterCore {
 		);
 		
 		if( $this->_mfilterUrl ) {
+			
 			preg_match_all( '/([a-z0-9\-_]+)\[([^]]*)\]/', $this->_mfilterUrl, $matches );
 			
 			if( isset( $matches[0] ) && $matches[0] !== '' ) {
@@ -343,7 +344,7 @@ class MegaFilterCore {
 						}
 						case 'price' : {
 							if( isset( $value[0] ) && isset( $value[1] ) ) {
-								$this->_conditions['out']['mf_price'] = '( `mf_price` > ' . ( (int) $value[0] - 1 ) . ' AND `mf_price` < ' . ( (int) $value[1] + 1 ) . ')';
+								$this->_conditions['out']['mf_price'] = '( `mf_price` > ' . ( (int) ($value[0] / $this->_ctrl->currency->getValue("USD")) - 1 ) . ' AND `mf_price` < ' . ( (int) ($value[1] / $this->_ctrl->currency->getValue("USD")) + 1 ) . ')';
 							} else {
 								$value = NULL;
 							}
@@ -1164,7 +1165,7 @@ class MegaFilterCore {
 					`pd`.`product_id` = `p`.`product_id` AND `pd`.`language_id` = " . (int) $this->_ctrl->config->get( 'config_language_id' ) . "
 			";
 		}
-		
+	
 		if( ! empty( $this->_data['filter_category_id'] ) || $this->_categories ) {
 			if( ! in_array( 'p2c', $skip ) ) {
 				$sql .= $this->_joinProductToCategory( 'p2c' );
@@ -1324,10 +1325,9 @@ class MegaFilterCore {
 		
 		if( ! $query->num_rows )
 			return array( 'min' => 0, 'max' => 0 );
-		
 		return array(
-			'min'	=> floor( $query->row['p_min'] * $this->_ctrl->currency->getValue() ),
-			'max'	=> ceil( $query->row['p_max'] * $this->_ctrl->currency->getValue() )
+			'min'	=> floor( $query->row['p_min'] * $this->_ctrl->currency->getValue("USD") ),
+			'max'	=> ceil( $query->row['p_max'] * $this->_ctrl->currency->getValue("USD") )
 		);
 	}
 	

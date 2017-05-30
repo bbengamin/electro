@@ -492,6 +492,7 @@ MegaFilter.prototype = {
 			return;
 		}
 		
+		
 		var id = 'mfilter-free-container-' + jQuery('[id^="mfilter-free-container"]').length,
 			cnt = jQuery('<div class="mfilter-free-container mfilter-direction-' + self._options.direction + '">')
 				.prependTo( jQuery('body') ),
@@ -516,6 +517,15 @@ MegaFilter.prototype = {
 			
 					hidden = ! hidden;
 				}),
+			closeBtn = jQuery('<div class="mfilter-close-btn hidden">')
+				.appendTo( cnt )
+				.click(function(){
+					cnt.animate(self._options.direction == 'rtl' ? {
+						'marginRight' : - ( cnt.outerWidth(true)<cnt.outerWidth()?cnt.outerWidth():cnt.outerWidth(true) )
+					} : {
+						'marginLeft' : - cnt.outerWidth(true)
+					}, 500);
+				}),
 			cnt2 = jQuery('<div>')
 				.css('overflow','hidden')
 				.attr('id', id)
@@ -523,6 +533,8 @@ MegaFilter.prototype = {
 			cnt3 = jQuery('<div>')
 				.appendTo( cnt2 ),
 			src = jQuery('<span class="mfilter-before-box">');
+			
+			
 	
 		self._relativeScroll = new IScroll( '#' + id, {
 			bounce: false,

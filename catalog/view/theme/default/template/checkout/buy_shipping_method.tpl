@@ -18,6 +18,15 @@
     <?php echo $quote['title']; ?> - <?php echo $quote['text']; ?>
   </label>
 </div>
+<?php if($quote['code'] == 'novaposhta.novaposhta'){ ?>
+    <select name='novaposhta-select' class='sh-additional selectpicker' id='novaposhta'>
+      <option value="" disabled selected>Выберите отделение</option>
+      <?php foreach($quote['point'] as $point) { ?>
+        <option><?php echo $point['name']; ?></option>
+      <?php } ?>
+    </select>
+<?php } ?>
+
 <?php } ?>
 <?php } else { ?>
 <div class="alert alert-danger"><?php echo $shipping_method['error']; ?></div>
@@ -25,6 +34,7 @@
 <?php } ?>
 <?php } ?>
 <script type="text/javascript">
+    $('.selectpicker').selectpicker();
     $('input[name=\'shipping_method\'').change(function(){
         selectShipping();
     });

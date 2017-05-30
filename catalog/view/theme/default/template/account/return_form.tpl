@@ -152,23 +152,19 @@
           </div>
           <?php echo $captcha; ?>
         </fieldset>
-        <?php if ($text_agree) { ?>
+        
         <div class="buttons clearfix">
-          <div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-danger"><?php echo $button_back; ?></a></div>
-          <div class="pull-right"><?php echo $text_agree; ?>
-            <?php if ($agree) { ?>
-            <input type="checkbox" name="agree" value="1" checked="checked" />
-            <?php } else { ?>
-            <input type="checkbox" name="agree" value="1" />
-            <?php } ?>
-            <input type="submit" value="<?php echo $button_submit; ?>" class="btn btn-primary" />
+          <div class="pull-left">
+            <a href="<?php echo $back; ?>" class="login-page-btns">
+              <?php echo $button_back; ?>
+            </a>
           </div>
-        </div>
-        <?php } else { ?>
-        <div class="buttons clearfix">
-          <div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div>
           <div class="pull-right">
-            <input type="submit" value="<?php echo $button_submit; ?>" class="btn btn-primary" />
+            <label for='reg-input' class="login-page-btns register-page-btns">
+              <input type="submit" id='reg-input' value="<?php echo $button_continue; ?>" class="hidden" />
+              <span>Отправить</span>
+            </label>
+           
           </div>
         </div>
         <?php } ?>

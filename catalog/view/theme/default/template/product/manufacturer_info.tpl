@@ -93,7 +93,11 @@
         <?php } ?>
       </div>
       </div>
-     
+     <?php if($more == 'true') { ?>
+        <div class="load-more-products-box">
+          <span class="load-more-products-btn"><span>Загрузить еще</span><i class="material-icons">keyboard_arrow_down</i></span>
+        </div>
+      <?php } ?>
       <?php } else { ?>
       <p><?php echo $text_empty; ?></p>
       <div class="buttons">

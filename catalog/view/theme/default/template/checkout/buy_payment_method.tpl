@@ -13,9 +13,6 @@
     <?php } ?>
   <label for='<?php echo $payment_method['code']; ?>'>
    <?php echo $payment_method['title']; ?>
-    <?php if ($payment_method['terms']) { ?>
-    (<?php echo $payment_method['terms']; ?>)
-    <?php } ?>
   </label>
 </div>
 <?php } ?>

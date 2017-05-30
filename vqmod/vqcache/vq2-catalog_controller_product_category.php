@@ -90,7 +90,11 @@ class ControllerProductCategory extends Controller {
 		$category_info = $this->model_catalog_category->getCategory($category_id);
 
 		if ($category_info) {
-			$this->document->setTitle($category_info['meta_title']);
+			if($category_info['meta_title']){
+				$this->document->setTitle($category_info['meta_title']);
+			}else{
+				$this->document->setTitle($category_info['name'] . " по низкой цене – купить в Украине: цены, описание, характеристики Electrotools.ua");
+			}
 			$this->document->setDescription($category_info['meta_description']);
 			$this->document->setKeywords($category_info['meta_keyword']);
 
@@ -123,8 +127,12 @@ class ControllerProductCategory extends Controller {
 			} else {
 				$data['thumb'] = '';
 			}
-
-			$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			
+			if($page == 1){
+				$data['description'] = html_entity_decode($category_info['description'], ENT_QUOTES, 'UTF-8');
+			} else {
+				$data['description'] = '';
+			}
 			$data['compare'] = $this->url->link('product/compare');
 
 			$url = '';
@@ -156,19 +164,27 @@ class ControllerProductCategory extends Controller {
 				}
 			
 			$data['categories'] = array();
-
-			$results = $this->model_catalog_category->getCategories($category_id);
-
-			foreach ($results as $result) {
-				$filter_data = array(
-					'filter_category_id'  => $result['category_id'],
-					'filter_sub_category' => true
-				);
-
-				$data['categories'][] = array(
-					'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
-					'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
-				);
+			if($page == 1){
+				$results = $this->model_catalog_category->getCategories($category_id);
+			
+				foreach ($results as $result) {
+					$filter_data = array(
+						'filter_category_id'  => $result['category_id'],
+						'filter_sub_category' => true
+					);
+					
+					if ($result['image']) {
+						$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+					} else {
+						$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+					}
+	
+					$data['categories'][] = array(
+						'name' => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
+						'image' => $image,
+						'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url)
+					);
+				}
 			}
 
 

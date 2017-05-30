@@ -36,6 +36,7 @@
             </div>
         </div>
         </div>
+        <?php if($products) { ?>
         <div class="modal-related-products">
             <h4>С этим товаром часто покупают</h4>
             <div id="slideshow-mod-after" class="owl-carousel" style="opacity: 1;">
@@ -65,6 +66,7 @@
                 <?php } ?>
             </div>
         </div>
+        <?php } ?>
     </div>
     <div class="with-this-modal-btns-box visible-xs hidden-sm hidden-md hidden-lg">
         <a href="<?php echo $checkout; ?>" class="make-it-order">Оформить заказ</a>

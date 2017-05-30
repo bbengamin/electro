@@ -2,6 +2,38 @@
 
 class ControllerCheckoutBuy extends Controller {
     
+    public function citySearch() {
+        $city_name = $this->request->get['text'];
+        $req = array();
+        $req['modelName'] = "Address";
+        $req['calledMethod'] = "getCities";
+        $req['apiKey'] = "cded6c36ad86d141f3d5c3dc21fbf878";
+        $req['methodProperties'] = array('FindByString' => $city_name);
+        
+        $response = $this->sendRequest("https://api.novaposhta.ua/v2.0/json/Address/getCities", $req);
+        
+        $cities = array();
+        foreach($response['data'] as $city) {
+            $cities[] = array(
+                'id' => $city['CityID'],
+                'name' => $city['DescriptionRu']
+            );
+        }
+        $this->response->setOutput(json_encode(array('cities' => $cities)));
+    }
+    
+    public function sendRequest($url, $data){
+        $ch = curl_init($url);
+        $payload = json_encode($data);
+        
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $payload );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        $result = curl_exec($ch);
+        curl_close($ch);
+        
+        return json_decode($result, true);
+    }
     public function editMy() {
         $this->load->language('checkout/buy');
 
@@ -27,6 +59,9 @@ class ControllerCheckoutBuy extends Controller {
         $data['settings'] = $this->model_setting_setting->getSetting('buy');
 
         $this->document->setTitle($data['settings']['buy_meta_title'.$lang]);
+        
+        $this->document->addScript('catalog/view/javascript/jquery/select/bootstrap-select.min.js');
+        $this->document->addStyle('catalog/view/javascript/jquery/select/bootstrap-select.min.css');
 
         $data['breadcrumbs'] = array();
 
@@ -745,8 +780,11 @@ class ControllerCheckoutBuy extends Controller {
                 $json['error']['address_2'] = $this->language->get('error_address_2');
             }
 
-            if ($settings['buy_city_status'] && $settings['buy_city_required'] && (!isset($this->request->post['city']) || utf8_strlen(trim($this->request->post['city'])) < 2 || utf8_strlen(trim($this->request->post['city'])) > 128)) {
+            if ($this->request->post['shipping_method'] == "citylink.citylink" &&  (!isset($this->request->post['city']) || utf8_strlen(trim($this->request->post['city'])) < 2 || utf8_strlen(trim($this->request->post['city'])) > 128)) {
                 $json['error']['city'] = $this->language->get('error_city');
+            }
+            if ($this->request->post['shipping_method'] == "novaposhta.novaposhta" &&  (!isset($this->request->post['novaposhta-select']) || empty($this->request->post['novaposhta-select']))) {
+                $json['error']['novaposhta-select'] = "Выберите отделение для доставки";
             }
 
             $this->load->model('localisation/country');
@@ -889,6 +927,7 @@ class ControllerCheckoutBuy extends Controller {
                 $this->session->data['shipping_address']['firstname'] = isset($this->request->post['firstname'])?$this->request->post['firstname']:$empty;
                 $this->session->data['shipping_address']['lastname'] = isset($this->request->post['lastname'])?$this->request->post['lastname']:$empty;
                 $this->session->data['shipping_address']['company'] = isset($this->request->post['company'])?$this->request->post['company']:$empty;
+                
                 $this->session->data['shipping_address']['address_1'] = isset($this->request->post['address_1'])?$this->request->post['address_1']:$empty;
                 $this->session->data['shipping_address']['address_2'] = isset($this->request->post['address_2'])?$this->request->post['address_2']:$empty;
                 $this->session->data['shipping_address']['postcode'] = isset($this->request->post['postcode'])?$this->request->post['postcode']:$empty;
@@ -925,13 +964,21 @@ class ControllerCheckoutBuy extends Controller {
 
             $this->session->data['shipping_method'] = $this->session->data['shipping_methods'][$shipping[0]]['quote'][$shipping[1]];
             $this->session->data['payment_method'] = $this->session->data['payment_methods'][$this->request->post['payment_method']];
-            $this->session->data['comment']= isset($this->request->post['comment'])?$this->request->post['comment']:'';
+            
+            $add = '';
+            if(isset($this->request->post['shipping_method']) && $this->request->post['shipping_method'] == "novaposhta.novaposhta" && isset($this->request->post['novaposhta-select'])){
+                $add = "Отделение новой почты: " . $this->request->post['novaposhta-select'];
+            }
+            
+            $comment = isset($this->request->post['comment']) ? $this->request->post['comment'] : '';
+            $this->session->data['comment'] = $add . " \n" . $comment;
 
             /* unset($this->session->data['shipping_method']);
               unset($this->session->data['shipping_methods']);
               unset($this->session->data['payment_method']);
               unset($this->session->data['payment_methods']); */
         }
+        
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -939,75 +986,95 @@ class ControllerCheckoutBuy extends Controller {
 
     public function getShippingMethods() {
         $this->load->language('checkout/checkout');
-
-        if (isset($this->session->data['shipping_address'])) {
-            $shipping_address = $this->session->data['shipping_address'];
-        } else {
-            $shipping_address = array();
-            $shipping_address['country_id'] = $this->config->get('config_country_id');
-            $shipping_address['zone_id'] = $this->request->get['zone_id'];
+        $json = array();
+        
+        if ((!isset($this->request->post['firstname']) || utf8_strlen(trim($this->request->post['firstname'])) < 1 || utf8_strlen(trim($this->request->post['firstname'])) > 32)) {
+            $json['error']['firstname'] = $this->language->get('error_firstname');
         }
 
-        // Shipping Methods
-        $method_data = array();
+        if ((!isset($this->request->post['email']) || utf8_strlen($this->request->post['email']) > 96 || !preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email']))) {
+            $json['error']['email'] = $this->language->get('error_email');
+        }
 
-        $this->load->model('extension/extension');
+        if ((!isset($this->request->post['telephone']) || utf8_strlen($this->request->post['telephone']) < 3 || utf8_strlen($this->request->post['telephone']) > 32)) {
+            $json['error']['telephone'] = $this->language->get('error_telephone');
+        }
 
-        $results = $this->model_extension_extension->getExtensions('shipping');
-
-        foreach ($results as $result) {
-            if ($this->config->get($result['code'] . '_status')) {
-                $this->load->model('shipping/' . $result['code']);
-
-                $quote = $this->{'model_shipping_' . $result['code']}->getQuote($shipping_address);
-
-                if ($quote) {
-                    $method_data[$result['code']] = array(
-                        'title' => $quote['title'],
-                        'quote' => $quote['quote'],
-                        'sort_order' => $quote['sort_order'],
-                        'error' => $quote['error']
-                    );
+        if ((!isset($this->request->post['city']) || utf8_strlen(trim($this->request->post['city'])) < 2 || utf8_strlen(trim($this->request->post['city'])) > 128)) {
+            $json['error']['city'] = $this->language->get('error_city');
+        }
+        
+        
+        if(!$json){
+    
+            if (isset($this->session->data['shipping_address'])) {
+                $shipping_address = $this->session->data['shipping_address'];
+            } else {
+                $shipping_address = array();
+                $shipping_address['country_id'] = $this->config->get('config_country_id');
+                $shipping_address['zone_id'] = $this->request->post['zone_id'];
+            }
+                $shipping_address['city'] = $this->request->post['city'];
+    
+            // Shipping Methods
+            $method_data = array();
+    
+            $this->load->model('extension/extension');
+    
+            $results = $this->model_extension_extension->getExtensions('shipping');
+    
+            foreach ($results as $result) {
+                if ($this->config->get($result['code'] . '_status')) {
+                    $this->load->model('shipping/' . $result['code']);
+    
+                    $quote = $this->{'model_shipping_' . $result['code']}->getQuote($shipping_address);
+    
+                    if ($quote) {
+                        $method_data[$result['code']] = array(
+                            'title' => $quote['title'],
+                            'quote' => $quote['quote'],
+                            'sort_order' => $quote['sort_order'],
+                            'error' => $quote['error']
+                        );
+                    }
                 }
             }
+    
+            $sort_order = array();
+    
+            foreach ($method_data as $key => $value) {
+                $sort_order[$key] = $value['sort_order'];
+            }
+    
+            array_multisort($sort_order, SORT_ASC, $method_data);
+    
+            $this->session->data['shipping_methods'] = $method_data;
+    
+            $data['text_shipping_method'] = $this->language->get('text_shipping_method');
+            $data['text_loading'] = $this->language->get('text_loading');
+    
+            if (empty($this->session->data['shipping_methods'])) {
+                $data['error_warning'] = sprintf($this->language->get('error_no_shipping'), $this->url->link('information/contact'));
+            } else {
+                $data['error_warning'] = '';
+            }
+    
+            if (isset($this->session->data['shipping_methods'])) {
+                $data['shipping_methods'] = $this->session->data['shipping_methods'];
+            } else {
+                $data['shipping_methods'] = array();
+            }
+    
+            if (isset($this->session->data['shipping_method']['code'])) {
+                $data['code'] = $this->session->data['shipping_method']['code'];
+            } else {
+                $data['code'] = '';
+            }
+            
+            $json['shipping'] = $this->load->view('default/template/checkout/buy_shipping_method.tpl', $data); 
         }
-
-        $sort_order = array();
-
-        foreach ($method_data as $key => $value) {
-            $sort_order[$key] = $value['sort_order'];
-        }
-
-        array_multisort($sort_order, SORT_ASC, $method_data);
-
-        $this->session->data['shipping_methods'] = $method_data;
-
-        $data['text_shipping_method'] = $this->language->get('text_shipping_method');
-        $data['text_loading'] = $this->language->get('text_loading');
-
-        if (empty($this->session->data['shipping_methods'])) {
-            $data['error_warning'] = sprintf($this->language->get('error_no_shipping'), $this->url->link('information/contact'));
-        } else {
-            $data['error_warning'] = '';
-        }
-
-        if (isset($this->session->data['shipping_methods'])) {
-            $data['shipping_methods'] = $this->session->data['shipping_methods'];
-        } else {
-            $data['shipping_methods'] = array();
-        }
-
-        if (isset($this->session->data['shipping_method']['code'])) {
-            $data['code'] = $this->session->data['shipping_method']['code'];
-        } else {
-            $data['code'] = '';
-        }
-
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/buy_shipping_method.tpl')) {
-            $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/checkout/buy_shipping_method.tpl', $data));
-        } else {
-            $this->response->setOutput($this->load->view('default/template/checkout/buy_shipping_method.tpl', $data));
-        }
+        
+        $this->response->setOutput(json_encode($json));
     }
 
     public function getPaymentMethods() {
@@ -1325,6 +1392,12 @@ class ControllerCheckoutBuy extends Controller {
                 $order_data['shipping_method'] = '';
                 $order_data['shipping_code'] = '';
             }
+            
+            if($order_data['shipping_code'] != "citylink.citylink"){
+                $order_data['shipping_address_1'] = '';
+                $order_data['payment_address_1'] = '';
+            }
+            
 
             $order_data['products'] = array();
 

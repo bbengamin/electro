@@ -10,7 +10,7 @@ class ControllerCronBought extends Controller {
 		
 		$this->load->model('catalog/product');
 		$product = $this->model_catalog_product->getProduct($product_id);
-		$html = 'Только что купили <a class="bought-color" href="' . $this->url->link('product/product', 'product_id=' . $product_id) . '">' . $product['name'] . '</a> за <span class="bought-color">' . $this->currency->format($product['price']) . '</span>';
+		$html = '<span class='bouht-title'>Только что купили</span> <a class="bought-color" href="' . $this->url->link('product/product', 'product_id=' . $product_id) . '">' . $product['name'] . '</a> за <span class="bought-color">' . $this->currency->format($product['price']) . '</span>';
 		
 		
 		$this->db->query("DELETE FROM `oc_setting` WHERE store_id = '0' AND `code` = 'cron' AND `key`= 'bought'");

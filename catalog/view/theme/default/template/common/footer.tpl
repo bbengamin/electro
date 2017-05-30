@@ -49,6 +49,23 @@
   
   <div class="bought hidden">
     <?php echo $bought; ?>
+    <div class="bought-close"><i class="material-icons" id="bought-close">close</i></div>
+  </div>
+  <div id="scrollup">
+    <i class="material-icons">keyboard_arrow_up</i>
+  </div>
+  
+  <div class="my-vidgets vidget-callback">
+    <a>
+      <i class="material-icons">call</i>
+      <span>Перезвоните мне</span>
+    </a>
+  </div>
+  <div class="my-vidgets vidget-livechat">
+    <a>
+      <i class="material-icons">chat</i>
+      <span>Живой чат</span>
+    </a>
   </div>
 </footer>
 
@@ -67,10 +84,10 @@
               <input type='text' placeholder='Ваше имя...' name='name'>
             </div>
             <div class="input-field">
-              <input type='text' placeholder='+38(067)465-65-78' name='phone'>
+              <input type='text' placeholder='+38(0__)___-__-__' name='phone'>
             </div>
             <div class="input-field">
-              <button type='submit' id="submit-call-back-header">Отправить</button>
+              <button type='submit' id="submit-call-back-header">Перезвонить</button>
             </div>
           </form>
           <h4 class='modal-thanks'>Спасибо за заявку, мы свяжемся с Вами в ближайшее время</h4>
@@ -97,8 +114,33 @@
 
 
 <div class='left-side'>
-  <div class='button-up'><span>Вверх <i class="material-icons">keyboard_arrow_up</i></span></div>
+  <div class='button-up'><span>Вверх</span> <i class="material-icons">keyboard_arrow_up</i></div>
 </div>
-
-<script crossorigin="anonymous" async type="text/javascript" src="//api.pozvonim.com/widget/callback/v3/a3fa4103fc741f384a127fa598aa51db/connect" id="check-code-pozvonim" charset="UTF-8"></script> 
+<div id='chatra-wrapper-footer'>
+  <button type="button" class="close" data-dismiss="modal"><i class="material-icons">close</i></button>
+  <div id='chatra-content-footer'>
+    
+  </div>
+</div>
+<!-- Chatra {literal} -->
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'GLYL8QLKg9D3Hv6Yt';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = (d.location.protocol === 'https:' ? 'https:': 'http:')
+        + '//call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+</script>
+<!-- /Chatra {/literal} -->
+<script>
+window.ChatraSetup = {
+    mode: 'frame',
+    injectTo: '<?php echo ($product_chat_mode) ? "chatra-wrapper" : "chatra-content-footer"; ?>'
+};
+</script>
 </body></html>

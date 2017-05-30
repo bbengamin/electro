@@ -30,6 +30,7 @@
 <link href="<?php echo $style['href']; ?>" type="text/css" rel="<?php echo $style['rel']; ?>" media="<?php echo $style['media']; ?>" />
 <?php } ?>
 
+<script src="catalog/view/javascript/media.js" type="text/javascript"></script>
 <script src="catalog/view/javascript/common.js" type="text/javascript"></script>
 <?php foreach ($links as $link) { ?>
 <link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" />
@@ -43,13 +44,72 @@
 <?php foreach ($analytics as $analytic) { ?>
 <?php echo $analytic; ?>
 <?php } ?>
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="<?php echo $name; ?>">
+  <meta property="og:url" content="/">
+  <meta property="og:description" name="description" content="<?php echo $description; ?>">
+  <meta property="og:image" content="/image/catalog/logo_png (2).png">
 </head>
 <body>
+  <div class="micro-hidden-box" itemscope itemtype="http://schema.org/Organization">
+    <span itemprop="name"><?php echo $name; ?></span> © 2014-2017 <br/>
+    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+      Адрес:
+      <span itemprop="streetAddress">Харьковская область</span>
+      <span itemprop="addressLocality">Харьков</span>, <span itemprop="postalCode">61000</span>
+    </div>
+    Телефоны:<span itemprop="telephone"><?php echo $telephone; ?></span>,<span itemprop="telephone">$telephone_2</span>,<br/>
+    Электронная почта: <span itemprop="email"><?php echo $email; ?></span> <br/>
+  </div>
   <!--preloader start-->
   <div id="page-preloader" class="block" style="background: #fff;">
    <div class="gear"></div> 
   </div>
   <!--preloader end-->
+  
+  <!--mobile start-->
+  <div id="mobile-overlay" onclick="closeNavcategory();closeNavsearch();closeNavsettings()"></div>
+  <div id="category-mob-list" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn-mob" onclick="closeNavcategory()"><i class="material-icons">close</i></a>
+    <ul class="nav navbar-nav">
+        <?php foreach ($categories as $category) { ?>
+        <?php if ($category['children']) { ?>
+        <li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category['name']; ?></a>
+          <div class="dropdown-menu">
+            <div class="dropdown-inner">
+              <?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
+              <ul class="list-unstyled">
+                <?php foreach ($children as $child) { ?>
+                <li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>
+                <?php } ?>
+              </ul>
+              <?php } ?>
+              <div class="category-menu-img-box" style='background: url("<?php echo $category['image']; ?>") no-repeat center;'>
+                
+              </div>
+            </div>
+            
+        </li>
+        <?php } else { ?>
+        <li><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a></li>
+        <?php } ?>
+        <?php } ?>
+      </ul>s
+  </div>
+  <div id="search-mob-box" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn-mob" onclick="closeNavsearch()"><i class="material-icons">close</i></a>
+    
+  </div>
+  <div id="top-links-mob-box" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn-mob" onclick="closeNavsettings()"><i class="material-icons">close</i></a>
+    
+  </div>
+  
+  <!--mobile end-->
+  
+  
+  
+  
   <header class='fixed-head'>
       <div class='left-row-head'>
         <div class="header-black-background"></div>
@@ -79,15 +139,16 @@
                   <li><a href='/delivery_payment'>Доставка и оплата</a></li>
                   <li><a href="/contact">Контакты</a></li>
                   <li><a href='/special'>Акции</a></li>
+                  <li><a class="icon-menu-item" href="/index.php?route=product/compare"><span id="compare-total">Сравнение товаров (<?php echo $compare_count; ?>)</span></a></li>
                   <!-- <li><a href=''><i class="material-icons">access_time</i> <span>Пн-Сб с 9:00 до 20:00</span></a></li> -->
                 </ul>
                 <ul class="list-unstyled head-right-menu">
                   <?php if ($logged) { ?>
-                    <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_logged; ?>"><i class="material-icons">perm_identity</i> <span class="">Здравствуйте, <?php echo $text_logged; ?></span></a>
+                    <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_logged; ?>"><i class="material-icons">perm_identity</i> <span class="">Здравствуйте, <?php echo $text_logged; ?></span></a></li>
+                    <li><a href='/logout'>Выход</a></li>
                   <?php } else { ?>
-                    <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>"><i class="material-icons">perm_identity</i> <span class=""><?php echo $text_account; ?></span></a>
+                    <li class="dropdown"><a href="<?php echo $account; ?>" title="<?php echo $text_account; ?>"><i class="material-icons">perm_identity</i> <span class=""><?php echo $text_account; ?></span></a></li>
                   <?php } ?>
-                  </li>
                 </ul>
               </div>
             </div>
@@ -125,10 +186,40 @@
         <div class="header-black-background"></div>
         <div class="header-orange-background"></div>
       </div>
-  </header>  
+  </header>
+  
+  <header class="mobile-header">
+    <div class="header-mobile-inner">
+      <div class="header-mobile-item mobile-item-category-list">
+        <span class="mob-menu-trigger mob-category-trigger" onclick="openNavcategory()">
+          <i class="material-icons">menu</i>
+        </span>
+      </div>
+      <div class="header-mobile-item mobile-item-search">
+        <span class="mob-menu-trigger mob-search-trigger" onclick="openNavsearch()">
+          <i class="material-icons">search</i>
+        </span>
+      </div>
+      <div class="header-mobile-item mobile-item-logo">
+        <a href="/">
+          <img src="/catalog/view/theme/default/image/mobile-logo.png" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" class="img-responsive" />
+        </a>
+      </div>
+      <div class="header-mobile-item mobile-item-cart">
+        <span class="mob-menu-trigger mob-cart-trigger">
+          <i class="material-icons">shopping_cart</i>
+         </span>
+      </div>
+      <div class="header-mobile-item mobile-item-options">
+        <span class="mob-menu-trigger mob-settings-trigger" onclick="openNavsettings()">
+          <i class="material-icons">settings</i>
+         </span>
+      </div>
+    </div>
+  </header>
 
 <body class="<?php echo $class; ?>">
-<header>
+<header class='desctop-only-header'>
   <div class="container">
     <div class="row">
       <div class="col-sm-4">
@@ -149,10 +240,10 @@
       <ul class="nav navbar-nav">
         <?php foreach ($categories as $category) { ?>
         <?php if ($category['children']) { ?>
-        <li class="dropdown"><a href="<?php echo $category['href']; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category['name']; ?></a>
+        <li><a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a>
           <div class="dropdown-menu">
             <div class="dropdown-inner">
-              <?php foreach (array_chunk($category['children'], ceil(count($category['children']) / $category['column'])) as $children) { ?>
+              <?php foreach (array_chunk($category['children'], 6) as $children) { ?>
               <ul class="list-unstyled">
                 <?php foreach ($children as $child) { ?>
                 <li><a href="<?php echo $child['href']; ?>"><?php echo $child['name']; ?></a></li>

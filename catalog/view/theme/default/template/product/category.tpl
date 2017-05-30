@@ -16,13 +16,31 @@
     <?php } else { ?>
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
+    
+
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
+    
+    <div class="categories clearfix">
+      <div class="row">
+        <?php foreach ($categories as $category) { ?>
+          <div class="col-md-4 col-sm-6">
+            <a href="<?php echo $category['href']; ?>" class='category-lists-item'>
+              <div>
+                <img src="<?php echo $category['image']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>">
+              </div>
+              <span><?php echo $category['name']; ?></span>
+            </a>
+          </div>
+        <?php } ?>
+      </div>
+    </div>
       <?php if ($products) { ?>
       <div class="row">
         <div class="sort-items-box">
           <?php foreach ($sorts as $key => $sort) { ?>
               <a href="<?php echo $sort['href']; ?>" class="<?php echo $key; ?> <?php echo $sort['direction']; ?>"><?php echo $sort['text']; ?></a>
           <?php } ?>
+          <a class="mobile-filter-button visible-xs">Фильтр</a>
         </div>
       </div>
       <div id='ajaxProductContainer'>
@@ -93,14 +111,19 @@
         <?php } ?>
       </div>
       </div>
-      <div class="row">
+      <?php if($more == 'true') { ?>
+        <div class="load-more-products-box">
+          <span class="load-more-products-btn"><span>Загрузить еще</span><i class="material-icons">keyboard_arrow_down</i></span>
+        </div>
+      <?php } ?>
+      <div class="row desc-cat">
         <?php echo $description; ?>
       </div>
       <?php } ?>
       <?php if (!$categories && !$products) { ?>
       <p><?php echo $text_empty; ?></p>
       <div class="buttons">
-        <div class="pull-right"><a href="<?php echo $continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
+        <div class="pull-right"><a href="<?php echo $continue; ?>" class="main-btn"><?php echo $button_continue; ?></a></div>
       </div>
       <?php } ?></div>
     <?php echo $column_right; ?></div>

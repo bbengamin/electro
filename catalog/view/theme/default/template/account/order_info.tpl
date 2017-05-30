@@ -65,7 +65,7 @@
           </tr>
         </tbody>
       </table>
-      <div class="table-responsive">
+      <div class="table-responsive hidden-xs">
         <table class="table table-bordered table-hover">
           <thead>
             <tr>
@@ -92,9 +92,12 @@
               <td class="text-right"><?php echo $product['price']; ?></td>
               <td class="text-right"><?php echo $product['total']; ?></td>
               <td class="text-right" style="white-space: nowrap;"><?php if ($product['reorder']) { ?>
-                <a href="<?php echo $product['reorder']; ?>" data-toggle="tooltip" title="<?php echo $button_reorder; ?>" class="btn btn-primary"><i class="fa fa-shopping-cart"></i></a>
+              <div class="buttons-holder">
+                <a href="<?php echo $product['reorder']; ?>" data-toggle="tooltip" title="<?php echo $button_reorder; ?>" class="new-butons-item buy-info-btn"><i class="material-icons">add_shopping_cart</i></a>
                 <?php } ?>
-                <a href="<?php echo $product['return']; ?>" data-toggle="tooltip" title="<?php echo $button_return; ?>" class="btn btn-danger"><i class="fa fa-reply"></i></a></td>
+                
+              </div>
+              </td>
             </tr>
             <?php } ?>
             <?php foreach ($vouchers as $voucher) { ?>
@@ -110,20 +113,47 @@
             </tr>
             <?php } ?>
           </tbody>
-          <tfoot>
-            <?php foreach ($totals as $total) { ?>
-            <tr>
-              <td colspan="3"></td>
-              <td class="text-right"><b><?php echo $total['title']; ?></b></td>
-              <td class="text-right"><?php echo $total['text']; ?></td>
-              <?php if ($products) { ?>
-              <td></td>
-              <?php } ?>
-            </tr>
-            <?php } ?>
-          </tfoot>
+          
         </table>
+        
       </div>
+      <div class="mobile-cart-box mobile-order-info-box visible-xs">
+          <div class="mobile-cart-inner">
+              <?php foreach ($products as $product) { ?>
+              <div class="mob-item-cart">
+                  <div class="mob-cart-item mob-cart-item-img">
+                      <span><?php echo $product['name']; ?></span>
+                      <div class="buttons-holder">
+                        <?php if ($product['reorder']) { ?>
+                        <a href="<?php echo $product['reorder']; ?>" data-toggle="tooltip" title="<?php echo $button_reorder; ?>" class="new-butons-item buy-info-btn">В корзину</a>
+                        <?php } ?>
+                        
+                      </div>
+                  </div>
+                  
+                  
+                  
+                  <div class="mob-cart-item mob-cart-item-text-box">
+                      <ul class="list-unstyled order-details-lists">
+                        <li><span class="bolder">Модель</span>:<span><?php echo $product['model']; ?></span></li>
+                        <li><span class="bolder">Количчество</span>:<span><?php echo $product['quantity']; ?></span></li>
+                        <li><span class="bolder">Цена</span>:<span><?php echo $product['price']; ?></span></li>
+                        <li><span class="bolder">Всего</span>:<span><?php echo $product['total']; ?></span></li>
+                      </ul>
+                  </div>
+              </div>
+              <?php } ?>
+              
+          </div>
+      </div>
+      <ul class="totals-box list-unstyled">
+          <?php foreach ($totals as $total) { ?>
+          <li>
+              <span class="total-item total-head-item"><strong><?php echo $total['title']; ?>:</strong></span>
+              <span class="total-item total-not-head-item"><?php echo $total['text']; ?></span>
+          </li>
+          <?php } ?>
+      </ul>
       <?php if ($comment) { ?>
       <table class="table table-bordered table-hover">
         <thead>
@@ -160,7 +190,9 @@
       </table>
       <?php } ?>
       <div class="buttons clearfix">
-        <div class="pull-right"><a href="<?php echo $continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
+        <div class="pull-right">
+          <a href="<?php echo $continue; ?>" class="login-page-btns"><?php echo $button_continue; ?></a>
+        </div>
       </div>
       <?php echo $content_bottom; ?></div>
     <?php echo $column_right; ?></div>

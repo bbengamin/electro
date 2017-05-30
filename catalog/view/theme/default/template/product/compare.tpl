@@ -19,23 +19,29 @@
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
     <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
-      <h1><?php echo $heading_title; ?></h1>
+      <div class='category-title'>
+        <h2><?php echo $heading_title; ?></h2>
+      </div>
       <?php if ($products) { ?>
-      <table class="table table-bordered">
+      <div class="table-responsive">
+      <table class="table table-bordered ti<?php echo count($products); ?>">
         <thead>
           <tr>
-            <td colspan="<?php echo count($products) + 1; ?>"><strong><?php echo $text_product; ?></strong></td>
+            <td class='my_gray' ><strong><?php echo $text_product; ?></strong></td>
+            <?php foreach ($products as $product) { ?>
+            <td><a href="<?php echo $product['remove']; ?>" class="compare-btns delete"><i class="material-icons">delete_sweep</i> Удалить из сравнения</a></td>
+            <?php } ?>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><?php echo $text_name; ?></td>
+            <td class='my_gray'><?php echo $text_name; ?></td>
             <?php foreach ($products as $product) { ?>
-            <td><a href="<?php echo $product['href']; ?>"><strong><?php echo $product['name']; ?></strong></a></td>
+              <td class='compare-name-box'><a href="<?php echo $product['href']; ?>"><strong><?php echo $product['name']; ?></strong></a></td>
             <?php } ?>
           </tr>
           <tr>
-            <td><?php echo $text_image; ?></td>
+            <td class='my_gray'><?php echo $text_image; ?></td>
             <?php foreach ($products as $product) { ?>
             <td class="text-center"><?php if ($product['thumb']) { ?>
               <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-thumbnail" />
@@ -43,7 +49,7 @@
             <?php } ?>
           </tr>
           <tr>
-            <td><?php echo $text_price; ?></td>
+            <td class='my_gray'><?php echo $text_price; ?></td>
             <?php foreach ($products as $product) { ?>
             <td><?php if ($product['price']) { ?>
               <?php if (!$product['special']) { ?>
@@ -55,25 +61,25 @@
             <?php } ?>
           </tr>
           <tr>
-            <td><?php echo $text_model; ?></td>
+            <td class='my_gray'><?php echo $text_model; ?></td>
             <?php foreach ($products as $product) { ?>
             <td><?php echo $product['model']; ?></td>
             <?php } ?>
           </tr>
           <tr>
-            <td><?php echo $text_manufacturer; ?></td>
+            <td class='my_gray'><?php echo $text_manufacturer; ?></td>
             <?php foreach ($products as $product) { ?>
             <td><?php echo $product['manufacturer']; ?></td>
             <?php } ?>
           </tr>
           <tr>
-            <td><?php echo $text_availability; ?></td>
+            <td class='my_gray'><?php echo $text_availability; ?></td>
             <?php foreach ($products as $product) { ?>
             <td><?php echo $product['availability']; ?></td>
             <?php } ?>
           </tr>
           <tr>
-            <td><?php echo $text_summary; ?></td>
+            <td class='my_gray'><?php echo $text_summary; ?></td>
             <?php foreach ($products as $product) { ?>
             <td class="description"><?php echo $product['description']; ?></td>
             <?php } ?>
@@ -82,13 +88,13 @@
         <?php foreach ($attribute_groups as $attribute_group) { ?>
         <thead>
           <tr>
-            <td colspan="<?php echo count($products) + 1; ?>"><strong><?php echo $attribute_group['name']; ?></strong></td>
+            <td class='my_gray n_center' colspan="<?php echo count($products) + 1; ?>"><strong><?php echo $attribute_group['name']; ?></strong></td>
           </tr>
         </thead>
         <?php foreach ($attribute_group['attribute'] as $key => $attribute) { ?>
         <tbody>
           <tr>
-            <td><?php echo $attribute['name']; ?></td>
+            <td class='my_gray'><?php echo $attribute['name']; ?></td>
             <?php foreach ($products as $product) { ?>
             <?php if (isset($product['attribute'][$key])) { ?>
             <td><?php echo $product['attribute'][$key]; ?></td>
@@ -103,15 +109,17 @@
         <tr>
           <td></td>
           <?php foreach ($products as $product) { ?>
-          <td><input type="button" value="<?php echo $button_cart; ?>" class="btn btn-primary btn-block" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');" />
-            <a href="<?php echo $product['remove']; ?>" class="btn btn-danger btn-block"><?php echo $button_remove; ?></a></td>
+          <td>
+          <div class='compare-btns crt-add' data-toggle="tooltip" title="Добавить в корзину" onclick="cart.add('<?php echo $product['product_id']; ?>', '<?php echo $product['minimum']; ?>');"><i class="material-icons">add_shopping_cart</i><span class="">Купить</span></div> 
+          </td>
           <?php } ?>
         </tr>
       </table>
+      </div>
       <?php } else { ?>
       <p><?php echo $text_empty; ?></p>
       <div class="buttons">
-        <div class="pull-right"><a href="<?php echo $continue; ?>" class="btn btn-default"><?php echo $button_continue; ?></a></div>
+        <div class="pull-right"><a href="<?php echo $continue; ?>" class="main-btn"><?php echo $button_continue; ?></a></div>
       </div>
       <?php } ?>
       <?php echo $content_bottom; ?></div>

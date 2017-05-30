@@ -165,7 +165,7 @@ class ControllerSaleOrder extends Controller {
 				'order_id'      => $result['order_id'],
 				'customer'      => $result['customer'],
 				'status'        => $result['status'],
-				'total'         => $this->currency->format($result['total'], $result['currency_code'], $result['currency_value']),
+				'total'         => $this->currency->format($result['total']),
 				'date_added'    => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'date_modified' => date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
 				'shipping_code' => $result['shipping_code'],
@@ -995,8 +995,8 @@ class ControllerSaleOrder extends Controller {
 					'model'    		   => $product['model'],
 					'option'   		   => $option_data,
 					'quantity'		   => $product['quantity'],
-					'price'    		   => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-					'total'    		   => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']),
+					'price'    		   => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0)),
+					'total'    		   => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0)),
 					'href'     		   => $this->url->link('catalog/product/edit', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
 				);
 			}
@@ -1008,7 +1008,7 @@ class ControllerSaleOrder extends Controller {
 			foreach ($vouchers as $voucher) {
 				$data['vouchers'][] = array(
 					'description' => $voucher['description'],
-					'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
+					'amount'      => $this->currency->format($voucher['amount']),
 					'href'        => $this->url->link('sale/voucher/edit', 'token=' . $this->session->data['token'] . '&voucher_id=' . $voucher['voucher_id'], 'SSL')
 				);
 			}
@@ -1020,7 +1020,7 @@ class ControllerSaleOrder extends Controller {
 			foreach ($totals as $total) {
 				$data['totals'][] = array(
 					'title' => $total['title'],
-					'text'  => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+					'text'  => $this->currency->format($total['value']),
 				);
 			}
 
@@ -1041,7 +1041,7 @@ class ControllerSaleOrder extends Controller {
 				$data['affiliate'] = '';
 			}
 
-			$data['commission'] = $this->currency->format($order_info['commission'], $order_info['currency_code'], $order_info['currency_value']);
+			$data['commission'] = $this->currency->format($order_info['commission']);
 
 			$this->load->model('marketing/affiliate');
 
@@ -1700,8 +1700,8 @@ class ControllerSaleOrder extends Controller {
 						'model'    => $product['model'],
 						'option'   => $option_data,
 						'quantity' => $product['quantity'],
-						'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']),
-						'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
+						'price'    => $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0)),
+						'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0))
 					);
 				}
 
@@ -1712,7 +1712,7 @@ class ControllerSaleOrder extends Controller {
 				foreach ($vouchers as $voucher) {
 					$voucher_data[] = array(
 						'description' => $voucher['description'],
-						'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value'])
+						'amount'      => $this->currency->format($voucher['amount'])
 					);
 				}
 
@@ -1723,7 +1723,7 @@ class ControllerSaleOrder extends Controller {
 				foreach ($totals as $total) {
 					$total_data[] = array(
 						'title' => $total['title'],
-						'text'  => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value']),
+						'text'  => $this->currency->format($total['value']),
 					);
 				}
 

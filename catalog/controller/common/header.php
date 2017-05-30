@@ -91,6 +91,11 @@ class ControllerCommonHeader extends Controller {
 		$data['scripts'] = $this->document->getScripts();
 		$data['lang'] = $this->language->get('code');
 		$data['direction'] = $this->language->get('direction');
+		
+		if (!isset($this->session->data['compare'])) {
+			$this->session->data['compare'] = array();
+		}
+		$data['compare_count'] = count($this->session->data['compare']);
 
 		$data['name'] = $this->config->get('config_name');
 
@@ -141,6 +146,7 @@ class ControllerCommonHeader extends Controller {
 		$data['contact'] = $this->url->link('information/contact');
 		$data['telephone'] = $this->config->get('config_telephone');
 		$data['telephone_2'] = $this->config->get('config_telephone_2');
+		$data['email'] = $this->config->get('config_email');
 
 		$status = true;
 
@@ -167,7 +173,6 @@ class ControllerCommonHeader extends Controller {
 		$categories = $this->model_catalog_category->getCategories(0);
 
 		foreach ($categories as $category) {
-			if ($category['top']) {
 				// Level 2
 				$children_data = array();
 
@@ -183,24 +188,53 @@ class ControllerCommonHeader extends Controller {
 						'name'  => $child['name'] . ($this->config->get('config_product_count') ? ' (' . $this->model_catalog_product->getTotalProducts($filter_data) . ')' : ''),
 						'href'  => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
 					);
+					
+					if ($child['top']) {
+						
+						if ($category['image']) {
+							$image = $this->model_tool_image->resize($category['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+						} else {
+							$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+					
+						}
+			
+						$data['categories'][] = array(
+							'image'     => $image,
+							'name'     => $child['name'],
+							'children' => array(),
+							'column'   =>  1,
+							'sort_order'   => $child['sort_order'],
+							'href'     => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
+						);
+					}
 				}
 				
-				if ($category['image']) {
-					$image = $this->model_tool_image->resize($category['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-				} else {
-					$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
-				}
-
+			if ($category['image']) {
+				$image = $this->model_tool_image->resize($category['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+			} else {
+				$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+		
+			}
+			if ($category['top']) {
 				// Level 1
 				$data['categories'][] = array(
 					'image'     => $image,
 					'name'     => $category['name'],
 					'children' => $children_data,
 					'column'   => $category['column'] ? $category['column'] : 1,
+					'sort_order'   => $category['sort_order'],
 					'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
 				);
 			}
 		}
+		
+		$sort_order = array();
+
+		foreach ($data['categories'] as $key => $value) {
+			$sort_order[$key] = $value['sort_order'];
+		}
+
+		array_multisort($sort_order, SORT_ASC, $data['categories']);
 
 		$data['language'] = $this->load->controller('common/language');
 		$data['currency'] = $this->load->controller('common/currency');

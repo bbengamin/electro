@@ -1,9 +1,18 @@
 <?php echo $header; ?>
 <div class="container">
-  <ul class="breadcrumb">
-    <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
-    <?php } ?>
+  <ul class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    <?php $bi = 0; foreach ($breadcrumbs as $breadcrumb) { ?>
+    <li itemscope itemtype="<?php echo $breadcrumb['href']; ?>">
+      <a href="<?php echo $breadcrumb['href']; ?>" itemprop="url">
+        <span itemprop="title"><?php echo $breadcrumb['text']; ?></span>
+      </a>
+      <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+      <link itemprop="item" href="<?php echo $breadcrumb['href']; ?>">
+      <meta itemprop="name" content="<?php echo $breadcrumb['text']; ?>" />
+      <meta itemprop="position" content="<?php echo $bi; ?>" />
+      </span>
+    </li>
+    <?php $bi++;} ?>
   </ul>
   <div class='category-title'>
     <h2><?php echo $heading_title; ?></h2>
@@ -16,7 +25,7 @@
     <?php } else { ?>
     <?php $class = 'col-sm-12'; ?>
     <?php } ?>
-    <div id="content" class="<?php echo $class; ?>"><?php echo $content_top; ?>
+    <div id="content" class="<?php echo $class; ?> product-page"><?php echo $content_top; ?>
       <div class="row">
         <?php if ($column_left || $column_right) { ?>
         <?php $class = 'col-sm-6'; ?>
@@ -24,8 +33,41 @@
         <?php $class = 'col-sm-6'; ?>
         <?php } ?>
         <div class="<?php echo $class; ?>">
+            <div class='micro' itemscope itemtype="http://schema.org/Product">
+              <span itemprop="brand">Electrotools.ua</span>
+              <span itemprop="name"><?php echo $heading_title; ?></span>
+              <img itemprop="image" src="<?php echo $thumb; ?>" alt="Купить <?php echo $heading_title; ?>" />
+              <span itemprop="description"><?php echo $description; ?></span>
+              Артикул: <span itemprop="mpn"><?php echo $model; ?></span>
+              <span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+              <span itemprop="ratingValue">4.8</span> из 5, основываясь на <span itemprop="reviewCount">89
+                </span> отзывов
+            </span>
+              <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+              <meta itemprop="priceCurrency" content="UAN" />
+              руб.<span itemprop="price"><?php echo $price; ?></span>
+          
+              <span itemprop="seller" itemscope itemtype="http://schema.org/Organization">
+                <span itemprop="name">Electrotools.ua</span>
+              </span>
+              <link intemprop="itemCondition" href="http://schema.org/UsedCondition"/>
+              <link itemprop="availability" href="http://schema.org/InStock"/>В наличии!Заказать сейчас!
+              </span>
+          
+            </div>
           <?php if ($thumb || $images) { ?>
           <div class="thumbnails">
+            <div class="marks-box">
+              <?php if($data['bestseller']) { ?>
+                <span class='marks hit-mark'>Хит продаж</span>
+              <?php } ?>
+              <?php if($data['sale']) { ?>
+                <span class='marks special-mark'>Акция</span>
+              <?php } ?>
+              <?php if($data['latest']) { ?>
+                <span class='marks latest-mark'>Новинка</span>
+              <?php } ?>
+            </div>
             <?php if ($thumb) { ?>
             <div><a class="thumbnail" href="<?php echo $popup; ?>" title="<?php echo $heading_title; ?>"><img src="<?php echo $thumb; ?>" title="<?php echo $heading_title; ?>" alt="<?php echo $heading_title; ?>" /></a></div>
             <?php } ?>
@@ -47,15 +89,8 @@
         <?php } ?>
         <div class="<?php echo $class; ?>">
           <h1 class='product-title'><?php echo $heading_title; ?></h1>
-          <?php if($data['bestseller']) { ?>
-                <span>Хит продаж</span>
-              <?php } ?>
-              <?php if($data['sale']) { ?>
-                <span>Акция</span>
-              <?php } ?>
-              <?php if($data['latest']) { ?>
-                <span>Новинка</span>
-              <?php } ?>
+          
+              
           <ul class="list-unstyled product-up-atributes">
             <?php if ($manufacturer) { ?>
             <li><span class='prod-up-text prod-up-text-left'><?php echo $text_manufacturer; ?></span> <span class='prod-up-text prod-up-text-right'><a href="<?php echo $manufacturers; ?>"><?php echo $manufacturer; ?></span></a></li>
@@ -86,12 +121,6 @@
                     <span class='curent-price-value'><?php echo $special; ?></span>
               </span>
             </li>
-            <?php } ?>
-            <?php if ($tax) { ?>
-            <li><?php echo $text_tax; ?> <?php echo $tax; ?></li>
-            <?php } ?>
-            <?php if ($points) { ?>
-            <li><?php echo $text_points; ?> <?php echo $points; ?></li>
             <?php } ?>
             <?php if ($discounts) { ?>
             <li>
@@ -301,8 +330,12 @@
             <?php if ($review_status) { ?>
             <li><a href="#tab-review" data-toggle="tab"><?php echo $tab_review; ?></a></li>
             <?php } ?>
+            <li><a href="#tab-chat" data-toggle="tab">Задать вопрос по товару</a></li>
           </ul>
           <div class="tab-content">
+            <div class="tab-pane" id="tab-chat">
+              <div id="chatra-wrapper"></div>
+            </div>
             <div class="tab-pane active" id="tab-description"><?php echo $description; ?></div>
             <?php if ($attribute_groups) { ?>
             <div class="tab-pane" id="tab-specification">
@@ -346,18 +379,22 @@
                 </div>
                 <div class="form-group required">
                   <div class="col-sm-12">
-                    <label class="control-label"><?php echo $entry_rating; ?></label>
-                    &nbsp;&nbsp;&nbsp; <?php echo $entry_bad; ?>&nbsp;
-                    <input type="radio" name="rating" value="1" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="2" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="3" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="4" />
-                    &nbsp;
-                    <input type="radio" name="rating" value="5" />
-                    &nbsp;<?php echo $entry_good; ?></div>
+                    <div class="reviews-box">
+                      <span class="control-label"><?php echo $entry_rating; ?></span>
+                     <div class="reviews-items">
+                        <input type="radio" id='review_1' name="rating" value="1" />
+                        <label for='review_1'><i class="material-icons">star</i></label>
+                        <input type="radio" id='review_2' name="rating" value="2" />
+                        <label for='review_2'><i class="material-icons">star</i></label>
+                        <input type="radio" id='review_3' name="rating" value="3" />
+                        <label for='review_3'><i class="material-icons">star</i></label>
+                        <input type="radio" id='review_4' name="rating" value="4" />
+                        <label for='review_4'><i class="material-icons">star</i></label>
+                        <input type="radio" id='review_5' name="rating" value="5" />
+                        <label for='review_5'><i class="material-icons">star</i></label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <?php echo $captcha; ?>
                 <div class="buttons clearfix">
@@ -515,7 +552,28 @@ $('select[name=\'recurring_id\'], input[name="quantity"]').change(function(){
 	});
 });
 //--></script>
-<script type="text/javascript"><!--
+<script type="text/javascript">
+function drawActiveOnSelecterStars(){
+  var $label = $('.reviews-items input[name="rating"]:checked').next();
+  $label.addClass('active');
+  $label.prevAll().addClass("active");
+}
+
+$('.reviews-items input[name="rating"]').on('click', function() {
+    drawActiveOnSelecterStars();
+});
+
+$('.reviews-items label').hover(
+  function(){
+    $('.reviews-items label').removeClass("active");
+    $(this).prevAll().addClass("active");
+  },
+  function(){
+    $('.reviews-items label').removeClass("active");
+    drawActiveOnSelecterStars();
+  }
+);
+
 $('#button-cart').on('click', function() {
 	$.ajax({
 		url: 'index.php?route=checkout/cart/add',
@@ -566,7 +624,7 @@ $('#button-cart').on('click', function() {
         }
 	});
 });
-//--></script>
+</script>
 <script type="text/javascript"><!--
 $('.date').datetimepicker({
 	pickTime: false

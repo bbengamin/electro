@@ -153,9 +153,12 @@ class ControllerProductProduct extends Controller {
 			
 			if(!isset($this->session->data['viewed'])){
 				$this->session->data['viewed'] = array();
-				$this->session->data['viewed'][$product_id] = $product_id;
-			} else if(!isset($this->session->data['viewed'][$product_id])){
-				$this->session->data['viewed'][$product_id] = $product_id;
+			}
+			
+			if(!isset($this->session->data['viewed'][$product_id])){
+				$this->session->data['viewed'][$product_id] = 1;
+			}else{
+				$this->session->data['viewed'][$product_id] += 1;
 			}
 		} else {
 			$product_id = 0;
@@ -226,7 +229,14 @@ class ControllerProductProduct extends Controller {
 				'href' => $this->url->link('product/product', $url . '&product_id=' . $this->request->get['product_id'])
 			);
 
-			$this->document->setTitle($product_info['meta_title']);
+			if(!empty($product_info['meta_title'])){
+				$this->document->setTitle($product_info['meta_title']);
+			}else{
+				$t = $product_info['name'] . " недорого – купить в Украине: цены и отзывы Electrotools.ua";
+				$this->document->setTitle($t);
+			}
+			
+			
 			$this->document->setDescription($product_info['meta_description']);
 			$this->document->setKeywords($product_info['meta_keyword']);
 			$this->document->addLink($this->url->link('product/product', 'product_id=' . $this->request->get['product_id']), 'canonical');

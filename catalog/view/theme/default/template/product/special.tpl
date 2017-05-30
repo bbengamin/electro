@@ -97,7 +97,7 @@
       <?php } else { ?>
       <p><?php echo $text_empty; ?></p>
       <div class="buttons">
-        <div class="pull-right"><a href="<?php echo $continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
+        <div class="pull-right"><a href="<?php echo $continue; ?>" class="main-btn"><?php echo $button_continue; ?></a></div>
       </div>
       <?php } ?>
      </div>

@@ -29,10 +29,19 @@
             </div>
           </div>
         </fieldset>
+        
         <div class="buttons clearfix">
-          <div class="pull-left"><a href="<?php echo $back; ?>" class="btn btn-default"><?php echo $button_back; ?></a></div>
+          <div class="pull-left">
+            <a href="<?php echo $back; ?>" class="login-page-btns">
+              <?php echo $button_back; ?>
+            </a>
+          </div>
           <div class="pull-right">
-            <input type="submit" value="<?php echo $button_continue; ?>" class="btn btn-primary" />
+            <label for='reg-input' class="login-page-btns register-page-btns">
+              <input type="submit" id='reg-input' value="<?php echo $button_continue; ?>" class="hidden" />
+              <span><?php echo $button_continue; ?> <i class="material-icons">settings_remote</i></span>
+            </label>
+           
           </div>
         </div>
       </form>

@@ -79,6 +79,17 @@ class ControllerAccountWishList extends Controller {
 				} else {
 					$image = false;
 				}
+				
+				$images = array();
+
+				$results_img = $this->model_catalog_product->getProductImages($result['product_id']);
+		
+				foreach ($results_img as $result_img) {
+					$images[] = array(
+						'popup' => $this->model_tool_image->resize($result_img['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+						'thumb' => $this->model_tool_image->resize($result_img['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+					);
+				}
 
 				if ($product_info['quantity'] <= 0) {
 					$stock = $product_info['stock_status'];
@@ -103,7 +114,12 @@ class ControllerAccountWishList extends Controller {
 				$data['products'][] = array(
 					'product_id' => $product_info['product_id'],
 					'thumb'      => $image,
+					'images'       => $images,
 					'name'       => $product_info['name'],
+					'bestseller'       => $product_info['bestseller'],
+					'sale'       => $product_info['sale'],
+					'latest'       => $product_info['latest'],
+					'description' => utf8_substr(strip_tags(html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 					'model'      => $product_info['model'],
 					'stock'      => $stock,
 					'price'      => $price,
@@ -112,7 +128,7 @@ class ControllerAccountWishList extends Controller {
 					'remove'     => $this->url->link('account/wishlist', 'remove=' . $product_info['product_id'])
 				);
 			} else {
-				$this->model_account_wishlist->deleteWishlist($product_id);
+				$this->model_account_wishlist->deleteWishlist($result['product_id']);
 			}
 		}
 

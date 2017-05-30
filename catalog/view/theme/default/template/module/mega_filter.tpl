@@ -49,6 +49,8 @@
 		<?php echo $buttons['top']; ?>
 		<ul>
 			<?php foreach( $filters as $kfilter => $filter ) { ?>
+				<?php  if ($filter['type'] == 'checkbox' && count($filter['options']) < 2) continue;  ?>
+			
 				<?php
 				
 					$base_type = empty( $filter['base_type'] ) ? $filter['type'] : $filter['base_type'];
@@ -246,7 +248,7 @@
 										<?php
 										
 											$_tmp_type = $filter['type'];
-											
+						
 											if( in_array( $filter['type'], array( 'stock_status', 'manufacturers' ) ) ) {
 												$_tmp_type = 'checkbox';
 											}
@@ -255,7 +257,7 @@
 										<div class="mfilter-options-container">
 											<div class="mfilter-tb">
 											<?php $options_tmp = array(); ?>
-											<?php foreach( $filter['options'] as $option_id => $option ) { if( $option['name'] === '' || isset( $options_tmp[$option['key']] ) ) continue; $options_tmp[$option['key']] = true; ?>
+											<?php foreach( $filter['options'] as $option_id => $option ) { if( $option['name'] === '' || isset( $options_tmp[$option['key']] )) continue; $options_tmp[$option['key']] = true; ?>
 												<?php echo $_position == 'content_top' ? '<div class="mfilter-tb">' : ''; ?>
 												<div class="mfilter-option mfilter-tb-as-tr">
 													

@@ -39,17 +39,23 @@ class ControllerCheckoutAfterCart extends Controller {
 			$data['thumb'] = '';
 		}
 		
+		$cat_q = $this->db->query("SELECT category_id FROM oc_product_to_category WHERE product_id=" . $product_id);
+		
 		$filter_data = array(
 			'sort'  => 'p.sort_order',
 			'order' => 'ASC',
+			'filter_category_id' => $cat_q->row['category_id'],
 			'start' => 0,
 			'limit' => 6
 		);
 
-		$product_total = $this->model_catalog_product->getTotalProductSpecials();
-		$results = $this->model_catalog_product->getProductSpecials($filter_data);
-		
+		//$results = $this->model_catalog_product->getProductSpecials($filter_data);
+		$results = $this->model_catalog_product->getProducts($filter_data);
+		$data['products'] = array();
 		foreach ($results as $result) {
+			if($result['product_id'] == $product_id){
+				continue;
+			}
 			if ($result['image']) {
 				$image = $this->model_tool_image->resize($result['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
 			} else {

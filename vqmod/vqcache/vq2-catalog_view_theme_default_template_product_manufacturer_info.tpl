@@ -31,20 +31,36 @@
          <div class="product-layout product-grid col-xs-12 col-sm-6 col-md-4">
             <div class="product-thumb">
               <h4><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4>
-              <div class="image">
-                <div class="marks-box">
-                  <?php if($product['bestseller']) { ?>
-                    <span class='marks hit-mark'>Хит продаж</span>
-                  <?php } ?>
-                  <?php if($product['sale']) { ?>
-                    <span class='marks special-mark'>Акция</span>
-                  <?php } ?>
-                  <?php if($product['latest']) { ?>
-                    <span class='marks latest-mark'>Новинка</span>
-                  <?php } ?>
+              <div class="images-box-category">
+                <div class="image">
+                  <div class="marks-box">
+                    <?php if($product['bestseller']) { ?>
+                      <span class='marks hit-mark'>Хит продаж</span>
+                    <?php } ?>
+                    <?php if($product['sale']) { ?>
+                      <span class='marks special-mark'>Акция</span>
+                    <?php } ?>
+                    <?php if($product['latest']) { ?>
+                      <span class='marks latest-mark'>Новинка</span>
+                    <?php } ?>
+                  </div>
+                  <a href="<?php echo $product['href']; ?>">
+                    <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" />
+                  </a>
                 </div>
-                <a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" /></a>
+                
+                <div class="category-additional-images">
+                <ul class="additional-categoey-img-box list-unstyled">
+                 <?php foreach ($product['images'] as $image) { ?>
+                  <li>
+                    <a href="<?php echo $image['popup']; ?>" data-fancybox="<?php echo $product['product_id']; ?>" data-caption="<?php echo $product['name']; ?>">
+                      <img src="<?php echo $image['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" />
+                    </a>
+                  </li>
+                 <?php } ?>
+                </ul>
               </div>
+            </div>
               <div>
                 <div class="caption">
                   
@@ -77,7 +93,11 @@
         <?php } ?>
       </div>
       </div>
-     
+     <?php if($more == 'true') { ?>
+        <div class="load-more-products-box">
+          <span class="load-more-products-btn"><span>Загрузить еще</span><i class="material-icons">keyboard_arrow_down</i></span>
+        </div>
+      <?php } ?>
       <?php } else { ?>
       <p><?php echo $text_empty; ?></p>
       <div class="buttons">

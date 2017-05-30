@@ -23,17 +23,7 @@
                   </a>
                 </div>
                 
-                <div class="category-additional-images">
-                <ul class="additional-categoey-img-box list-unstyled">
-                 <?php foreach ($product['images'] as $image) { ?>
-                  <li>
-                    <a href="<?php echo $product['thumb']; ?>" data-fancybox="<?php echo $product['product_id']; ?>" data-caption="<?php echo $product['name']; ?>">
-                      <img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-responsive" />
-                    </a>
-                  </li>
-                 <?php } ?>
-                </ul>
-              </div>
+               
             </div>
         <div>
           <div class="caption">

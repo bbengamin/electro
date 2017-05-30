@@ -58,7 +58,9 @@ class Currency {
 
 			$currency = $this->code;
 		}
-
+		
+		$currency = 'USD';
+		
 		if ($value) {
 			$value = $value;
 		} else {

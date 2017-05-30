@@ -17,6 +17,11 @@ class ControllerCheckoutFast extends Controller {
 		}
 		if(!$json){
 			
+			$cur_state = $this->cart->getProducts();
+			foreach ($cur_state as $product) {
+				$this->cart->remove($product['cart_id']);
+			}
+			
 			$this->cart->add($this->request->post['product_id'], $this->request->post['quantity'], array(), 0);
 	
 			$method_data = array();
@@ -59,7 +64,7 @@ class ControllerCheckoutFast extends Controller {
 	
 	
 		
-			$this->session->data['shipping_method'] = $method_data["flat"]['quote']["flat"];
+			$this->session->data['shipping_method'] = $method_data["pickup"]['quote']["pickup"];
 	
 			$order_data['totals'] = array();
 			$total = 0;
@@ -125,10 +130,10 @@ class ControllerCheckoutFast extends Controller {
 			$order_data['payment_address_2'] = "";
 			$order_data['payment_city'] = "";
 			$order_data['payment_postcode'] = "";
-			$order_data['payment_zone'] = "Москва";
-			$order_data['payment_zone_id'] = 64;
-			$order_data['payment_country'] = "Россия";
-			$order_data['payment_country_id'] = 176;
+			$order_data['payment_zone'] = "Харьков";
+			$order_data['payment_zone_id'] = 660;
+			$order_data['payment_country'] = "Украина";
+			$order_data['payment_country_id'] = 8;
 			$order_data['payment_address_format'] = "";
 			$order_data['payment_custom_field'] = array();
 	
@@ -144,14 +149,14 @@ class ControllerCheckoutFast extends Controller {
 			$order_data['shipping_address_2'] = '';
 			$order_data['shipping_city'] = '';
 			$order_data['shipping_postcode'] = '';
-			$order_data['shipping_zone'] = '';
-			$order_data['shipping_zone_id'] = '';
-			$order_data['shipping_country'] = '';
-			$order_data['shipping_country_id'] = '';
+			$order_data['shipping_zone'] = "Харьков";
+			$order_data['shipping_zone_id'] = 660;
+			$order_data['shipping_country'] = "Украина";
+			$order_data['shipping_country_id'] = 8;
 			$order_data['shipping_address_format'] = '';
 			$order_data['shipping_custom_field'] = array();
-			$order_data['shipping_method'] = $method_data["flat"]['title'];
-			$order_data['shipping_code'] = "flat";
+			$order_data['shipping_method'] = $method_data["pickup"]['title'];
+			$order_data['shipping_code'] = "pickup";
 	
 			$order_data['products'] = array();
 	
@@ -226,6 +231,11 @@ class ControllerCheckoutFast extends Controller {
 			$this->session->data['order_id'] = $this->model_checkout_order->addOrder($order_data);
 			$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('cod_order_status_id'));
 			$json['success'] = 'success';
+			
+			$this->cart->clear();
+			foreach ($cur_state as $product) {
+				$this->cart->add($product['product_id'], $product['quantity'], array(), 0);
+			}
 		}
 
 		$this->response->setOutput(json_encode($json));

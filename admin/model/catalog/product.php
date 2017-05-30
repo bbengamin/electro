@@ -23,6 +23,7 @@ class ModelCatalogProduct extends Model {
 		foreach ($data['product_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
 			if (isset($data['keyword']) && empty($data['keyword'])) {
+				$value['name'] = trim($value['name'], " -\t\n\r\0\x0B");
 				$data['keyword'] = $this->translit($value['name']);
 			}
 		}
@@ -151,6 +152,7 @@ class ModelCatalogProduct extends Model {
 		foreach ($data['product_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', description = '" . $this->db->escape($value['description']) . "', tag = '" . $this->db->escape($value['tag']) . "', meta_title = '" . $this->db->escape($value['meta_title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "'");
 			if (isset($data['keyword']) && empty($data['keyword'])) {
+				$value['name'] = trim($value['name'], " -\t\n\r\0\x0B");
 				$data['keyword'] = $this->translit($value['name']);
 			}
 		}

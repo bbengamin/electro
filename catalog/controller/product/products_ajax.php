@@ -61,6 +61,7 @@ class ControllerProductProductsAjax extends Controller {
 				$filter_data['filter_sub_category'] = '1';
 			}
 		}
+		$filter_data['filter_sub_category'] = '1';
 		
 		if( ! empty( $this->request->get['manufacturer_id'] ) ) {
 			$filter_data['filter_manufacturer_id'] = (int) $this->request->get['manufacturer_id'];

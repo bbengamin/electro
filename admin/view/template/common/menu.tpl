@@ -144,6 +144,7 @@
           </li>
           <li><a href="<?php echo $country; ?>"><?php echo $text_country; ?></a></li>
           <li><a href="<?php echo $zone; ?>"><?php echo $text_zone; ?></a></li>
+          <li><a href="<?php echo $city; ?>">Новая почта</a></li>
           <li><a href="<?php echo $geo_zone; ?>"><?php echo $text_geo_zone; ?></a></li>
           <li><a class="parent"><?php echo $text_tax; ?></a>
             <ul>

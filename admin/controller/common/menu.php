@@ -131,6 +131,7 @@ class ControllerCommonMenu extends Controller {
 		$data['filter'] = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
 		$data['fraud'] = $this->url->link('extension/fraud', 'token=' . $this->session->data['token'], 'SSL');
 		$data['geo_zone'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
+		$data['city'] = $this->url->link('localisation/city', 'token=' . $this->session->data['token'], 'SSL');
 		$data['information'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
 		$data['installer'] = $this->url->link('extension/installer', 'token=' . $this->session->data['token'], 'SSL');
 		$data['language'] = $this->url->link('localisation/language', 'token=' . $this->session->data['token'], 'SSL');

@@ -41,6 +41,16 @@ class ControllerProductSearch extends Controller {
 			} else {
 				$image = $this->model_tool_image->resize('placeholder.png', $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
 			}
+			$images = array();
+
+			$results_img = $this->model_catalog_product->getProductImages($result['product_id']);
+	
+			foreach ($results_img as $result_img) {
+				$images[] = array(
+					'popup' => $this->model_tool_image->resize($result_img['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')),
+					'thumb' => $this->model_tool_image->resize($result_img['image'], $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
+				);
+			}
 
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
@@ -57,6 +67,10 @@ class ControllerProductSearch extends Controller {
 			$data['products'][] = array(
 				'product_id'  => $result['product_id'],
 				'thumb'       => $image,
+				'images'       => $images,
+				'bestseller'  => $result['bestseller'],
+				'latest'      => $result['latest'],
+				'sale'        => $result['sale'],
 				'name'        => $result['name'],
 				'description' => utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, $this->config->get('config_product_description_length')) . '..',
 				'price'       => $price,

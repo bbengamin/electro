@@ -1,13 +1,13 @@
 <?php
-$_['heading_title'] = 'Mega Filter';
+$_['heading_title'] = 'Фильтр';
 $_['name_price'] = 'Цена';
-$_['name_manufacturers'] = 'Manufacturers';
-$_['name_rating'] = 'Rating';
-$_['name_search'] = 'Search';
-$_['name_stock_status'] = 'Stock Status';
+$_['name_manufacturers'] = 'Производитель';
+$_['name_rating'] = 'Рейтинг';
+$_['name_search'] = 'Поиск';
+$_['name_stock_status'] = 'Остаток';
 $_['text_button_apply'] = 'Применить';
 $_['text_reset_all'] = 'Очистить фильтр';
-$_['text_show_more'] = 'Show more (%s)';
+$_['text_show_more'] = 'Показать еще (%s)';
 $_['text_show_less'] = 'Show less';
 $_['text_display'] = 'Display';
 $_['text_grid'] = 'Grid';

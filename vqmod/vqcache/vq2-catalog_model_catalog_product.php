@@ -202,6 +202,7 @@ class ModelCatalogProduct extends Model {
 						}
 					}
 				}
+				
 			
 		$query = $this->db->query($sql);
 
@@ -263,6 +264,7 @@ class ModelCatalogProduct extends Model {
 						}
 					}
 				}
+				
 			
 		$query = $this->db->query($sql);
 
@@ -409,6 +411,7 @@ class ModelCatalogProduct extends Model {
 						}
 					}
 				}
+				
 			
 		$query = $this->db->query($sql);
 
@@ -540,6 +543,7 @@ class ModelCatalogProduct extends Model {
 						}
 					}
 				}
+				
 			
 		$query = $this->db->query($sql);
 
